@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+Height-Field-Fluid-Simulation/Debug
+
+Height-Field-Fluid-Simulation/.vs
+*.DS_Store
+*.suo

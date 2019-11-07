@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="source\psychteapot2.cpp" />
+    <ClCompile Include="common\GL_utilities.c">
+      <Filter>MicroGlut</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Windows\glew.c">
+      <Filter>MicroGlut</Filter>
+    </ClCompile>
+    <ClCompile Include="common\loadobj.c">
+      <Filter>MicroGlut</Filter>
+    </ClCompile>
+    <ClCompile Include="common\LoadTGA.c">
+      <Filter>MicroGlut</Filter>
+    </ClCompile>
+    <ClCompile Include="common\Windows\MicroGlut.c">
+      <Filter>MicroGlut</Filter>
+    </ClCompile>
+    <ClCompile Include="common\VectorUtils3.c">
+      <Filter>MicroGlut</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="MicroGlut">
+      <UniqueIdentifier>{eb0411f1-499a-4882-9ff6-39f5b413dfd2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
