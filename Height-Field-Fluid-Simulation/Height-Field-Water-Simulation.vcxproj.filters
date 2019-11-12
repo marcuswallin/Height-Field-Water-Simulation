@@ -28,6 +28,9 @@
     <ClCompile Include="source\display.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="source\world_generator.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MicroGlut">
@@ -68,6 +71,9 @@
       <Filter>MicroGlut</Filter>
     </ClInclude>
     <ClInclude Include="source\display.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\world_generator.h">
       <Filter>source</Filter>
     </ClInclude>
   </ItemGroup>

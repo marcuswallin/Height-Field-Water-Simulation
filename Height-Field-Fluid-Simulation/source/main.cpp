@@ -15,14 +15,7 @@
 #include "display.h"
 #include <Windows.h>
 
-/*#include "VectorUtils3.h"
-#include "loadobj.h"
-#include "LoadTGA.h"
-#include "display.cpp"
-#include "cameracontrol.c"
 
-#include <iostream>
-#include <string>*/
 using namespace std;
 
 
@@ -41,7 +34,7 @@ int main(int argc, char *argv[])
 	glutInit(&argc, argv);
 	glutInitContextVersion(3, 2);
 	glutInitWindowSize(900, 900);
-	glutCreateWindow ((char *)"Ingemar's psychedelic teapot 2 c++");
+	glutCreateWindow ((char *)"Water Simulation");
 #ifdef WIN32
 	glewInit();
 #endif

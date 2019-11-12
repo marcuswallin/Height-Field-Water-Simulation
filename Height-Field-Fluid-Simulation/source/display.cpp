@@ -10,16 +10,19 @@
 #include <iostream>
 #include <string>
 #include "display.h"
+#include "world_generator.h"
+
 using namespace std;
 
 mat4 projectionMatrix;
 mat4 worldToViewMatrix, modelToWorldMatrix;
-Model* m;
+Model* m, *ground_model;
 GLuint program;
 
 void init(void)
 {
 	mat4 mx;
+	TextureData ground_tex;
 
 	// GL inits
 	glClearColor(1.0, 1.0, 1.0, 0);
@@ -32,7 +35,7 @@ void init(void)
 	glUseProgram(program);
 	initControls();
 	// Upload geometry to the GPU:
-	m = LoadModelPlus((char*)"objects/billboard.obj");
+	m = LoadModelPlus((char*)"objects/teapot.obj");
 	//should use LoadDataToModel
 	// End of upload of geometry
 
@@ -40,6 +43,9 @@ void init(void)
 	worldToViewMatrix = cameraPlacement();
 	modelToWorldMatrix = IdentityMatrix();
 
+	LoadTGATextureData("textures/fft-terrain.tga", &ground_tex);
+	ground_model = GenerateTerrain(&ground_tex);
+	printError("init terrain");
 	glUniformMatrix4fv(glGetUniformLocation(program, "camMatrix"), 1, GL_TRUE, worldToViewMatrix.m);
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
@@ -69,10 +75,9 @@ void display(void)
 	GLfloat t = glutGet(GLUT_ELAPSED_TIME) / 100.0;
 	glUniform1f(glGetUniformLocation(program, "t"), t);
 
-	vec3 test_vec = total * SetVector(1, 0, 0);
+	cout << to_string_vec3(get_view_pos())  << endl;
 
-	//cout << to_string_vec3(get_view_pos()) + " total: " + to_string_vec3(test_vec) << endl;
-
-	DrawModel(m, program, (char*)"inPosition", NULL, (char*)"inTexCoord");
+	DrawModel(m, program, "inPosition", NULL, "inTexCoord");
+	DrawModel(ground_model, program, "inPosition", "inNormal", "inTexCoord");
 	glutSwapBuffers();
 }
