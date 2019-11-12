@@ -1,4 +1,4 @@
-
+#pragma once
 #ifdef __APPLE__
 #include <OpenGL/gl3.h>
 // Linking hint for Lightweight IDE
@@ -18,11 +18,10 @@ GLfloat delta_phi = 0.0f;
 int x = 0;
 int y = 0;
 mat4 trans, rot;
-int room_size_roof, room_size_walls;
 vec3 get_view_pos(void);
 
 
-void initControls()
+extern void initControls()
 {
 	p = SetVector(0.0f, 0.0f, 1.0f);
 	l = SetVector(0.0f, 0.0f, 0.0f);
@@ -56,7 +55,7 @@ void mouse(int x1, int y1)
 }
 
 //returns a matrix containing the world to view matrix.
-mat4 cameraPlacement()
+extern mat4 cameraPlacement()
 {
 
 	vec3 v = SetVector(0.0f, 1.0f, 0.0f);

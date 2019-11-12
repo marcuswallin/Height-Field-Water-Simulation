@@ -25,6 +25,9 @@
     <ClCompile Include="source\cameracontrol.c">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="source\display.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MicroGlut">
@@ -63,6 +66,9 @@
     </ClInclude>
     <ClInclude Include="common\Windows\MicroGlut.h">
       <Filter>MicroGlut</Filter>
+    </ClInclude>
+    <ClInclude Include="source\display.h">
+      <Filter>source</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

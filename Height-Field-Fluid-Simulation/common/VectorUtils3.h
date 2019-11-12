@@ -151,7 +151,7 @@ extern "C" {
 
 #include <string>
 #include <sstream>
-std::string to_string(const vec3& v) {
+inline std::string to_string_vec3(const vec3& v) {
 
 	return std::to_string(v.x) + " " + std::to_string(v.y) + " " + std::to_string(v.z);
 }
