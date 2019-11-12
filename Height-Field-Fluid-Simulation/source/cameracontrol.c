@@ -11,7 +11,7 @@
 
 
 vec3 p, l;
-GLfloat old_theta = M_PI;
+GLfloat old_theta = 0;
 GLfloat delta_theta = 0.0f;
 GLfloat old_phi = M_PI / 2;
 GLfloat delta_phi = 0.0f;

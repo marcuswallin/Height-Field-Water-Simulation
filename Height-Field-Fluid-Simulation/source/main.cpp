@@ -74,8 +74,8 @@ void display(void)
 	glUseProgram(program);
 	GLfloat t = glutGet(GLUT_ELAPSED_TIME) / 100.0;
 	cam_matrix = cameraPlacement();
-	//model_world = T(0,0,-4.0);
-	model_world = IdentityMatrix();
+	model_world = T(0,0,-4.0);
+	//model_world = IdentityMatrix();
 	total = cam_matrix * model_world;
 	glUniformMatrix4fv(glGetUniformLocation(program, "camMatrix"), 1, GL_TRUE, cam_matrix.m);
 
