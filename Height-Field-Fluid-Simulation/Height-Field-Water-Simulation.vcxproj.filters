@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="source\psychteapot2.cpp" />
     <ClCompile Include="common\GL_utilities.c">
       <Filter>MicroGlut</Filter>
     </ClCompile>
@@ -20,10 +19,50 @@
     <ClCompile Include="common\VectorUtils3.c">
       <Filter>MicroGlut</Filter>
     </ClCompile>
+    <ClCompile Include="source\main.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\cameracontrol.c">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MicroGlut">
       <UniqueIdentifier>{eb0411f1-499a-4882-9ff6-39f5b413dfd2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{7ec92ec3-e19b-4489-8ddb-5cbac28030cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{0490b0d5-56e3-482c-a9dc-6fe5cfe08231}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="source\shaders\psych.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="source\shaders\psych.vert">
+      <Filter>shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="common\GL_utilities.h">
+      <Filter>MicroGlut</Filter>
+    </ClInclude>
+    <ClInclude Include="common\loadobj.h">
+      <Filter>MicroGlut</Filter>
+    </ClInclude>
+    <ClInclude Include="common\LoadTGA.h">
+      <Filter>MicroGlut</Filter>
+    </ClInclude>
+    <ClInclude Include="common\VectorUtils3.h">
+      <Filter>MicroGlut</Filter>
+    </ClInclude>
+    <ClInclude Include="common\zpr.h">
+      <Filter>MicroGlut</Filter>
+    </ClInclude>
+    <ClInclude Include="common\Windows\MicroGlut.h">
+      <Filter>MicroGlut</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
