@@ -72,8 +72,8 @@ void glutReshapeWindow(int width, int height);
 #define GLUT_DOUBLE			2
 #define GLUT_DEPTH			16
 
-#define GLUT_WINDOW_WIDTH		102
-#define GLUT_WINDOW_HEIGHT		103
+//#define GLUT_WINDOW_WIDTH		102
+//#define GLUT_WINDOW_HEIGHT		103
 
 // Special keys.
 #define GLUT_KEY_F1			1

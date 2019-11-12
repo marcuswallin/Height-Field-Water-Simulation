@@ -15,10 +15,11 @@
 #include <math.h>
 #include <stdio.h>
 
-
 #ifndef M_PI
 #define M_PI           3.14159265358979323846
 #endif
+
+
 
 #define Vector3f Point3D
 #define Matrix3f Matrix3D
@@ -148,6 +149,13 @@ extern "C" {
 // Some C++ operator overloads
 // Non-member C++ operators!
 
+#include <string>
+#include <sstream>
+std::string to_string(const vec3& v) {
+
+	return std::to_string(v.x) + " " + std::to_string(v.y) + " " + std::to_string(v.z);
+}
+
 // --- vec3 operations ---
 inline
 vec3 operator+(const vec3 &a, const vec3 &b) // vec3+vec3
@@ -191,6 +199,10 @@ void operator+=(vec3 &a, const vec3 &b) // vec3+=vec3
 {
 	a = a + b;
 }
+
+//std::string to_string(const vec3& v) {
+//	return std::to_string(v.x) + " " + std::to_string(v.y) + " " + std::to_string(v.z);
+//}
 
 inline
 void operator-=(vec3 &a, const vec3 &b) // vec3-=vec3

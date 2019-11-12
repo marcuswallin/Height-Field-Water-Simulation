@@ -18,6 +18,11 @@
 #include "loadobj.h"
 #include "LoadTGA.h"
 #include "cameracontrol.c"
+#include <string>
+#include <Windows.h>
+#include <iostream>
+
+using namespace std;
 
 mat4 projectionMatrix;
 mat4 worldToViewMatrix, modelToWorldMatrix;
@@ -39,14 +44,14 @@ void init(void)
 	// Load and compile shader
 	program = loadShaders("source/shaders/psych.vert", "source/shaders/psych.frag");
 	glUseProgram(program);
-	initControls(1, 1);
+	initControls();
 	// Upload geometry to the GPU:
 	m = LoadModelPlus((char *)"objects/billboard.obj");
 	//should use LoadDataToModel
 	// End of upload of geometry
 	
-	projectionMatrix = frustum(-0.5, 0.5, -0.5, 0.5, 1.0, 30.0);
-	worldToViewMatrix = lookAt(0, 1, 8, 0,0,0, 0,1,0);
+	projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 250.0);
+	worldToViewMatrix = cameraPlacement();//lookAt(0, 1, 8, 0,0,0, 0,1,0);
 	modelToWorldMatrix = IdentityMatrix();
 	
 	glUniformMatrix4fv(glGetUniformLocation(program, "camMatrix"), 1, GL_TRUE, worldToViewMatrix.m);
@@ -61,16 +66,25 @@ void display(void)
 	// clear the screen
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	mat4 rot, trans, total, cam_matrix;
+	mat4 total, cam_matrix, model_world;
+	//
 
+	printError("pre display");
+
+	glUseProgram(program);
 	GLfloat t = glutGet(GLUT_ELAPSED_TIME) / 100.0;
 	cam_matrix = cameraPlacement();
+	//model_world = T(0,0,-4.0);
+	model_world = IdentityMatrix();
+	total = cam_matrix * model_world;
+	glUniformMatrix4fv(glGetUniformLocation(program, "camMatrix"), 1, GL_TRUE, cam_matrix.m);
 
-	trans = T(0, -1, 0); // Move teapot to center it
-	total = modelToWorldMatrix;// *cam_matrix;//trans * Rx(-M_PI/2); // trans centers teapot, Rx rotates the teapot to a comfortable default
-	
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, total.m);
 	glUniform1f(glGetUniformLocation(program, "t"), t);
+
+	vec3 test_vec = total * SetVector(1, 0, 0);
+	
+	cout << to_string(get_view_pos()) + " total: " + to_string(test_vec)<< endl;
 
 	DrawModel(m, program, (char *)"inPosition", NULL, (char *)"inTexCoord");
 	
@@ -78,11 +92,21 @@ void display(void)
 }
 
 
+void timer(int i)
+{
+	glutTimerFunc(20, &timer, i);
+	glutPostRedisplay();
+}
+
 
 int main(int argc, char *argv[])
 {
+
+	AllocConsole();
+	freopen("CONOUT$", "a", stdout);
 	glutInit(&argc, argv);
 	glutInitContextVersion(3, 2);
+	glutInitWindowSize(900, 900);
 	glutCreateWindow ((char *)"Ingemar's psychedelic teapot 2 c++");
 #ifdef WIN32
 	glewInit();
@@ -90,8 +114,9 @@ int main(int argc, char *argv[])
 	glutDisplayFunc(display); 
 //	glutMouseFunc(mouseUpDown);
 	//	glutMotionFunc(mouseDragged);
-	glutPassiveMotionFunc(mouse);
-	glutRepeatingTimer(20);
+	//
+	//glutPassiveMotionFunc(mouse);
+	glutTimerFunc(20, &timer, 0);
 	init ();
 	glutMainLoop();
 	exit(0);
