@@ -9,5 +9,6 @@
 #include "LoadTGA.h"
 
 Model* GenerateTerrain(TextureData* tex);
-
+vec3 calculateNormal(GLfloat* vertexArray, int x, int z,  TextureData* tex);
+vec3 getVertex(GLfloat* verticeArray, int x, int z, TextureData* tex);
 #endif

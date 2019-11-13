@@ -93,6 +93,8 @@
   <ItemGroup>
     <None Include="source\shaders\psych.frag" />
     <None Include="source\shaders\psych.vert" />
+    <None Include="source\shaders\terrain.frag" />
+    <None Include="source\shaders\terrain.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common\GL_utilities.h" />

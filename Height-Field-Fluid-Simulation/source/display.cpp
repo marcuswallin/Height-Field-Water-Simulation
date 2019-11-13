@@ -18,6 +18,7 @@ mat4 projectionMatrix;
 mat4 worldToViewMatrix, modelToWorldMatrix;
 Model* m, *ground_model;
 GLuint program;
+GLuint ground_color_tex;
 
 void init(void)
 {
@@ -31,7 +32,7 @@ void init(void)
 	glCullFace(GL_TRUE);
 
 	// Load and compile shader
-	program = loadShaders("source/shaders/psych.vert", "source/shaders/psych.frag");
+	program = loadShaders("source/shaders/terrain.vert", "source/shaders/terrain.frag");
 	glUseProgram(program);
 	initControls();
 	// Upload geometry to the GPU:
@@ -44,6 +45,8 @@ void init(void)
 	modelToWorldMatrix = IdentityMatrix();
 
 	LoadTGATextureData("textures/fft-terrain.tga", &ground_tex);
+	glUniform1i(glGetUniformLocation(program, "tex"), 0);
+	LoadTGATextureSimple("textures/maskros512.tga", &ground_color_tex);
 	ground_model = GenerateTerrain(&ground_tex);
 	printError("init terrain");
 	glUniformMatrix4fv(glGetUniformLocation(program, "camMatrix"), 1, GL_TRUE, worldToViewMatrix.m);
@@ -76,8 +79,8 @@ void display(void)
 	glUniform1f(glGetUniformLocation(program, "t"), t);
 
 	cout << to_string_vec3(get_view_pos())  << endl;
-
-	DrawModel(m, program, "inPosition", NULL, "inTexCoord");
+	glBindTexture(GL_TEXTURE_2D, ground_color_tex);
+	DrawModel(m, program, "inPosition", "inNormal", "inTexCoord");
 	DrawModel(ground_model, program, "inPosition", "inNormal", "inTexCoord");
 	glutSwapBuffers();
 }

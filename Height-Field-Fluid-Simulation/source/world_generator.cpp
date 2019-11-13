@@ -37,7 +37,7 @@ Model* GenerateTerrain(TextureData* tex)
 		for (z = 0; z < tex->height; z++)
 		{
 
-			vec3 normal = SetVector(0, 0, 1);//calculateNormal(vertexArray, x, z);
+			vec3 normal = calculateNormal(vertexArray, x, z, tex);
 
 			normalArray[(x + z * tex->width) * 3 + 0] = normal.x;
 			normalArray[(x + z * tex->width) * 3 + 1] = normal.y;
@@ -70,4 +70,83 @@ Model* GenerateTerrain(TextureData* tex)
 		triangleCount * 3);
 
 	return model;
+}
+
+
+
+vec3 calculateNormal(GLfloat* vertexArray, int x, int z, TextureData* tex)
+{
+
+	vec3 this_vertice = getVertex(vertexArray, x, z, tex);
+	vec3 p1 = getVertex(vertexArray, x, (z - 1), tex);
+	vec3 p2 = getVertex(vertexArray, (x + 1), (z - 1),  tex);
+	vec3 p3 = getVertex(vertexArray, x + 1, z, tex);
+	vec3 p4 = getVertex(vertexArray, x, z + 1,  tex);
+	vec3 p5 = getVertex(vertexArray, x - 1, z + 1, tex);
+	vec3 p6 = getVertex(vertexArray, x - 1, z, tex);
+
+	vec3 v1 = SetVector(0.0f, 0.0f, 0.0f);
+	vec3 v2 = SetVector(0.0f, 0.0f, 0.0f);
+	vec3 v3 = SetVector(0.0f, 0.0f, 0.0f);
+	vec3 v4 = SetVector(0.0f, 0.0f, 0.0f);
+	vec3 v5 = SetVector(0.0f, 0.0f, 0.0f);
+	vec3 v6 = SetVector(0.0f, 0.0f, 0.0f);
+
+	if (!(p1 == v1))
+	{
+		v1 = VectorSub(p1, this_vertice);
+	}
+	if (!(p2 == v2))
+	{
+		v2 = VectorSub(p2, this_vertice);
+		//printf("p2 \n");
+	}
+
+	if (!(p3 == v3))
+	{
+		v3 = VectorSub(p3, this_vertice);
+		//printf("p3 \n");
+	}
+	if (!(p4 == v4))
+	{
+		v4 = VectorSub(p4, this_vertice);
+		//printf("p4 \n");
+	}
+	if (!(p5 == v5))
+	{
+		v5 = VectorSub(p5, this_vertice);
+		//printf("p5 \n");
+	}
+	if (!(p6 == v6))
+	{
+		v6 = VectorSub(p6, this_vertice);
+		//  printf("p6 \n");
+	}
+
+	vec3 normal = CrossProduct(v2, v1);
+	normal = VectorAdd(normal, CrossProduct(v3, v2));
+	normal = VectorAdd(normal, ScalarMult(CrossProduct(v4, v3), 2.0f));
+	normal = VectorAdd(normal, CrossProduct(v5, v4));
+	normal = VectorAdd(normal, CrossProduct(v6, v5));
+	normal = VectorAdd(normal, ScalarMult(CrossProduct(v1, v6), 2.0f));
+
+	normal = Normalize(normal);
+
+	return normal;
+}
+
+
+vec3 getVertex(GLfloat* verticeArray, int x, int z, TextureData* tex)
+{
+	//GLfloat * vertice = malloc(sizeof(GLfloat) * 3);
+	if (x >= 0 && x < tex->width && z >= 0 && z < tex->height)
+	{
+		vec3 vertex;
+		vertex.x = (GLfloat)verticeArray[(x + z * tex->width) * 3 + 0];
+		vertex.y = (GLfloat)verticeArray[(x + z * tex->width) * 3 + 1];
+		vertex.z = (GLfloat)verticeArray[(x + z * tex->width) * 3 + 2];
+		return vertex;
+	}
+	else
+		return SetVector(0.0f, 0.0f, 0.0f);
 }

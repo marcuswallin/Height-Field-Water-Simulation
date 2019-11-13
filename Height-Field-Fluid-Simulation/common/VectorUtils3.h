@@ -200,9 +200,12 @@ void operator+=(vec3 &a, const vec3 &b) // vec3+=vec3
 	a = a + b;
 }
 
-//std::string to_string(const vec3& v) {
-//	return std::to_string(v.x) + " " + std::to_string(v.y) + " " + std::to_string(v.z);
-//}
+
+inline
+bool operator==(const vec3& a, const vec3& b) 
+{
+	return a.x == b.x && a.y == b.y && a.z == b.z;
+}
 
 inline
 void operator-=(vec3 &a, const vec3 &b) // vec3-=vec3
