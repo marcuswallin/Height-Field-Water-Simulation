@@ -33,14 +33,14 @@ int main(int argc, char *argv[])
 	freopen("CONOUT$", "a", stdout);
 	glutInit(&argc, argv);
 	glutInitContextVersion(3, 2);
-	glutInitWindowSize(900, 900);
+	glutInitWindowSize(1200, 900);
 	glutCreateWindow ((char *)"Water Simulation");
 #ifdef WIN32
 	glewInit();
 #endif
 	glutDisplayFunc(display); 
 
-	glutTimerFunc(20, &timer, 0);
+	glutTimerFunc(0, &timer, 0);
 	init ();
 	glutMainLoop();
 	exit(0);

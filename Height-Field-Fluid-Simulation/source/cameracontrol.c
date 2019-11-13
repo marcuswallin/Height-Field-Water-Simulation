@@ -13,19 +13,21 @@
 vec3 p, l;
 GLfloat old_theta = 0;
 GLfloat delta_theta = 0.0f;
-GLfloat old_phi = M_PI / 2;
-GLfloat delta_phi = 0.0f;
+GLfloat old_phi;// = M_PI / 2;
+GLfloat delta_phi;// = 0.0f;
 int x = 0;
 int y = 0;
 mat4 trans, rot;
 vec3 get_view_pos(void);
 
 
-extern void initControls()
+void initControls(vec3 start_pos, GLfloat start_theta , GLfloat start_phi )
 {
 	p = SetVector(0.0f, 0.0f, 1.0f);
 	l = SetVector(0.0f, 0.0f, 0.0f);
-	trans = IdentityMatrix();
+	old_phi = start_phi;
+	old_theta = start_theta;
+	trans = T(start_pos.x,start_pos.y, start_pos.z);
 	glutHideCursor();
 }
 
@@ -36,7 +38,7 @@ void cameraRotation()
 
 	int distance_middle_x = x - 450;// (int)glutGet(GLUT_WINDOW_WIDTH) / 2;
 	int distance_middle_y = y - 450;// (int)glutGet(GLUT_WINDOW_HEIGHT) / 2;
-	int k = 3000;
+	int k = 500;
 	delta_theta = (GLfloat)distance_middle_x / k;
 	delta_phi = (GLfloat)distance_middle_y / k;
 
