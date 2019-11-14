@@ -19,13 +19,16 @@
     <ClCompile Include="common\VectorUtils3.c">
       <Filter>MicroGlut</Filter>
     </ClCompile>
-    <ClCompile Include="source\main.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="source\cameracontrol.c">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\display.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\main.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\watermass.cpp">
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="source\world_generator.cpp">
@@ -42,12 +45,24 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{0490b0d5-56e3-482c-a9dc-6fe5cfe08231}</UniqueIdentifier>
     </Filter>
+    <Filter Include="source\display">
+      <UniqueIdentifier>{d205e358-30b4-4bbc-926a-6db3e22e5535}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source\world">
+      <UniqueIdentifier>{7d3520e0-5065-4b3b-96f6-6b4deb4bd500}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="source\shaders\psych.frag">
+    <None Include="source\shaders\skybox.frag">
       <Filter>shaders</Filter>
     </None>
-    <None Include="source\shaders\psych.vert">
+    <None Include="source\shaders\skybox.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="source\shaders\terrainphong.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="source\shaders\terrainphong.vert">
       <Filter>shaders</Filter>
     </None>
     <None Include="source\shaders\terrain.frag">
@@ -77,6 +92,9 @@
       <Filter>MicroGlut</Filter>
     </ClInclude>
     <ClInclude Include="source\display.h">
+      <Filter>source</Filter>
+    </ClInclude>
+    <ClInclude Include="source\watermass.h">
       <Filter>source</Filter>
     </ClInclude>
     <ClInclude Include="source\world_generator.h">

@@ -7,12 +7,14 @@
 
 Model* GenerateTerrain(TextureData* tex)
 {
-	int vertexCount = tex->width * tex->height;
+	const int vertexCount = tex->width * tex->height;
 	int triangleCount = (tex->width - 1) * (tex->height - 1) * 2;
 	int x, z;
 	GLfloat* vertexArray;
 
+	//vertexArray = new GLfloat[vertexCount];//(GLfloat*)malloc(sizeof(GLfloat) * 3 * vertexCount);
 	vertexArray = (GLfloat*)malloc(sizeof(GLfloat) * 3 * vertexCount);
+
 	GLfloat* normalArray = (GLfloat*)malloc(sizeof(GLfloat) * 3 * vertexCount);
 	GLfloat* texCoordArray = (GLfloat*)malloc(sizeof(GLfloat) * 2 * vertexCount);
 	GLuint* indexArray = (GLuint*)malloc(sizeof(GLuint) * triangleCount * 3);
@@ -92,35 +94,23 @@ vec3 calculateNormal(GLfloat* vertexArray, int x, int z, TextureData* tex)
 	vec3 v5 = SetVector(0.0f, 0.0f, 0.0f);
 	vec3 v6 = SetVector(0.0f, 0.0f, 0.0f);
 
-	if (!(p1 == v1))
-	{
+	if (!(p1 == v1)){
 		v1 = VectorSub(p1, this_vertice);
 	}
-	if (!(p2 == v2))
-	{
+	if (!(p2 == v2)){
 		v2 = VectorSub(p2, this_vertice);
-		//printf("p2 \n");
 	}
-
-	if (!(p3 == v3))
-	{
+	if (!(p3 == v3)){
 		v3 = VectorSub(p3, this_vertice);
-		//printf("p3 \n");
 	}
-	if (!(p4 == v4))
-	{
+	if (!(p4 == v4)){
 		v4 = VectorSub(p4, this_vertice);
-		//printf("p4 \n");
 	}
-	if (!(p5 == v5))
-	{
+	if (!(p5 == v5)){
 		v5 = VectorSub(p5, this_vertice);
-		//printf("p5 \n");
 	}
-	if (!(p6 == v6))
-	{
+	if (!(p6 == v6)){
 		v6 = VectorSub(p6, this_vertice);
-		//  printf("p6 \n");
 	}
 
 	vec3 normal = CrossProduct(v2, v1);
@@ -138,7 +128,7 @@ vec3 calculateNormal(GLfloat* vertexArray, int x, int z, TextureData* tex)
 
 vec3 getVertex(GLfloat* verticeArray, int x, int z, TextureData* tex)
 {
-	//GLfloat * vertice = malloc(sizeof(GLfloat) * 3);
+	
 	if (x >= 0 && x < tex->width && z >= 0 && z < tex->height)
 	{
 		vec3 vertex;
@@ -150,3 +140,5 @@ vec3 getVertex(GLfloat* verticeArray, int x, int z, TextureData* tex)
 	else
 		return SetVector(0.0f, 0.0f, 0.0f);
 }
+
+

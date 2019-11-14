@@ -88,13 +88,16 @@
     <ClCompile Include="source\cameracontrol.c" />
     <ClCompile Include="source\display.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\watermass.cpp" />
     <ClCompile Include="source\world_generator.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="source\shaders\psych.frag" />
-    <None Include="source\shaders\psych.vert" />
+    <None Include="source\shaders\skybox.frag" />
+    <None Include="source\shaders\skybox.vert" />
     <None Include="source\shaders\terrain.frag" />
     <None Include="source\shaders\terrain.vert" />
+    <None Include="source\shaders\terrainphong.frag" />
+    <None Include="source\shaders\terrainphong.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common\GL_utilities.h" />
@@ -104,6 +107,7 @@
     <ClInclude Include="common\Windows\MicroGlut.h" />
     <ClInclude Include="common\zpr.h" />
     <ClInclude Include="source\display.h" />
+    <ClInclude Include="source\watermass.h" />
     <ClInclude Include="source\world_generator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -12,5 +12,5 @@
 
 void init(void);
 void display(void);
-
+void draw_sky_box(const mat4* mtv_matrix);
 #endif
