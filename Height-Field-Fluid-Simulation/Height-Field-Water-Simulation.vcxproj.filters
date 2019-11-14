@@ -20,19 +20,22 @@
       <Filter>MicroGlut</Filter>
     </ClCompile>
     <ClCompile Include="source\cameracontrol.c">
-      <Filter>source</Filter>
+      <Filter>source\display</Filter>
     </ClCompile>
     <ClCompile Include="source\display.cpp">
-      <Filter>source</Filter>
+      <Filter>source\display</Filter>
     </ClCompile>
     <ClCompile Include="source\main.cpp">
-      <Filter>source</Filter>
+      <Filter>source\display</Filter>
     </ClCompile>
     <ClCompile Include="source\watermass.cpp">
-      <Filter>source</Filter>
+      <Filter>source\world</Filter>
     </ClCompile>
     <ClCompile Include="source\world_generator.cpp">
-      <Filter>source</Filter>
+      <Filter>source\world</Filter>
+    </ClCompile>
+    <ClCompile Include="source\world.cpp">
+      <Filter>source\world</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -92,13 +95,16 @@
       <Filter>MicroGlut</Filter>
     </ClInclude>
     <ClInclude Include="source\display.h">
-      <Filter>source</Filter>
+      <Filter>source\display</Filter>
     </ClInclude>
     <ClInclude Include="source\watermass.h">
-      <Filter>source</Filter>
+      <Filter>source\world</Filter>
     </ClInclude>
     <ClInclude Include="source\world_generator.h">
-      <Filter>source</Filter>
+      <Filter>source\world</Filter>
+    </ClInclude>
+    <ClInclude Include="source\world.h">
+      <Filter>source\world</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
