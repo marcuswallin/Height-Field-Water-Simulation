@@ -12,17 +12,20 @@
 #include "display.h"
 #include "world_generator.h"
 
+
 using namespace std;
 
 mat4 worldToViewMatrix, modelToWorldMatrix, projectionMatrix;
-Model* m, *ground_model, *skybox_model;
+Model* m, * skybox_model,* ground_model;
 GLuint ground_program, sky_program;
 TextureData ground_color_tex, skybox_tex;
+
+//World world{};
+World world;
 
 void init(void)
 {
 	mat4 mx;
-	TextureData ground_tex;
 
 	// GL inits
 	glClearColor(1.0, 1.0, 1.0, 0);
@@ -40,12 +43,10 @@ void init(void)
 	// Upload geometry to the GPU:
 	m = LoadModelPlus((char*)"objects/teapot.obj");
 	skybox_model = LoadModelPlus((char*)"objects/skybox.obj");
-	LoadTGATextureData("textures/fft-terrain.tga", &ground_tex);
-	ground_model = GenerateTerrain(&ground_tex);
-
+	
+	world = World("textures/fft-terrain.tga");
 
 	//send matrices
-	
 	glUseProgram(ground_program);
 	projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 250.0);
 	worldToViewMatrix = cameraPlacement();
@@ -96,7 +97,7 @@ void display(void)
 	glUseProgram(ground_program);
 	glUniform1i(glGetUniformLocation(ground_program, "tex"), 0);
 	//DrawModel(m, ground_program, "inPosition", "inNormal", "inTexCoord");
-	DrawModel(ground_model, ground_program, "inPosition", "inNormal", "inTexCoord");
+	DrawModel(world.terrain_model, ground_program, "inPosition", "inNormal", "inTexCoord");
 	//DrawModel(skybox_model, ground_program, "inPosition", "inNormal", "inTexCoord");
 	glutSwapBuffers();
 }
