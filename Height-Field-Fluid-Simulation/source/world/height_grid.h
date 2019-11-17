@@ -5,7 +5,7 @@
 #include "MicroGlut.h"
 #include "GL_utilities.h"
 #include "VectorUtils3.h"
-//#include "world.h"
+#include "loadobj.h"
 #include <vector>
 
 //abstract class that is used to define terrain and watermass classes
@@ -18,6 +18,7 @@ public:
 	int grid_size_x;
 	int grid_size_z;
 
+	Model* model;
 
 
 private:

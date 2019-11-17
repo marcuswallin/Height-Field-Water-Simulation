@@ -9,11 +9,11 @@
 #include "world_generator.h"
 
 
-class Terrain : HeightGrid {
+class Terrain : public HeightGrid {
 public:
 	Terrain() = default;
 	Terrain(char* ground_gen_file);
-	Model* model;
+	//Model* model;
 private:
 	TextureData terrain_texture;
 	void tex_to_vector();
