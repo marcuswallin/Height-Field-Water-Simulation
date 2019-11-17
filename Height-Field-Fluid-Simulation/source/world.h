@@ -15,8 +15,9 @@ public:
 	creates terrain_texture and terrain_model
 	initializes grid_size based on terrain_texture
 	*/
-	World() = default;
 	World(char*);
+	World() = default;
+	
 
 	Model* terrain_model;
 private:
