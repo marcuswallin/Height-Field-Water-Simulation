@@ -10,7 +10,7 @@
 #include <iostream>
 #include <string>
 #include "display.h"
-#include "world_generator.h"
+//#include "world/world_generator.h"
 
 
 using namespace std;

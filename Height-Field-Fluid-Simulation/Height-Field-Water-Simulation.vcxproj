@@ -85,12 +85,12 @@
     <ClCompile Include="common\VectorUtils3.c" />
     <ClCompile Include="common\Windows\glew.c" />
     <ClCompile Include="common\Windows\MicroGlut.c" />
-    <ClCompile Include="source\cameracontrol.c" />
-    <ClCompile Include="source\display.cpp" />
+    <ClCompile Include="source\display\cameracontrol.c" />
+    <ClCompile Include="source\display\display.cpp" />
     <ClCompile Include="source\main.cpp" />
-    <ClCompile Include="source\watermass.cpp" />
-    <ClCompile Include="source\world.cpp" />
-    <ClCompile Include="source\world_generator.cpp" />
+    <ClCompile Include="source\world\watermass.cpp" />
+    <ClCompile Include="source\world\world.cpp" />
+    <ClCompile Include="source\world\world_generator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="source\shaders\skybox.frag" />
@@ -107,10 +107,10 @@
     <ClInclude Include="common\VectorUtils3.h" />
     <ClInclude Include="common\Windows\MicroGlut.h" />
     <ClInclude Include="common\zpr.h" />
-    <ClInclude Include="source\display.h" />
-    <ClInclude Include="source\watermass.h" />
-    <ClInclude Include="source\world.h" />
-    <ClInclude Include="source\world_generator.h" />
+    <ClInclude Include="source\display\display.h" />
+    <ClInclude Include="source\world\watermass.h" />
+    <ClInclude Include="source\world\world.h" />
+    <ClInclude Include="source\world\world_generator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

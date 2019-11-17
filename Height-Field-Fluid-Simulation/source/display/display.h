@@ -8,7 +8,7 @@
 //#include "GL_utilities.h"
 #include "VectorUtils3.h"
 #include "loadobj.h"
-#include "world.h"
+#include "../world/world.h"
 
 
 void init(void);

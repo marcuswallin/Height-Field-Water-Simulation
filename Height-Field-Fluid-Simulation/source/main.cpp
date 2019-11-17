@@ -12,7 +12,7 @@
 #include "MicroGlut.h"
 // uses framework Cocoa
 //#include "GL_utilities.h"
-#include "display.h"
+#include "display/display.h"
 #include <Windows.h>
 
 

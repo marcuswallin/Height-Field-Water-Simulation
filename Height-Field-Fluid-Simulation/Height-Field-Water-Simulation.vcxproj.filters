@@ -19,23 +19,23 @@
     <ClCompile Include="common\VectorUtils3.c">
       <Filter>MicroGlut</Filter>
     </ClCompile>
-    <ClCompile Include="source\cameracontrol.c">
-      <Filter>source\display</Filter>
-    </ClCompile>
-    <ClCompile Include="source\display.cpp">
-      <Filter>source\display</Filter>
-    </ClCompile>
     <ClCompile Include="source\main.cpp">
       <Filter>source\display</Filter>
     </ClCompile>
-    <ClCompile Include="source\watermass.cpp">
+    <ClCompile Include="source\world\world_generator.cpp">
       <Filter>source\world</Filter>
     </ClCompile>
-    <ClCompile Include="source\world_generator.cpp">
+    <ClCompile Include="source\world\world.cpp">
       <Filter>source\world</Filter>
     </ClCompile>
-    <ClCompile Include="source\world.cpp">
+    <ClCompile Include="source\world\watermass.cpp">
       <Filter>source\world</Filter>
+    </ClCompile>
+    <ClCompile Include="source\display\cameracontrol.c">
+      <Filter>source\display</Filter>
+    </ClCompile>
+    <ClCompile Include="source\display\display.cpp">
+      <Filter>source\display</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,17 +94,17 @@
     <ClInclude Include="common\Windows\MicroGlut.h">
       <Filter>MicroGlut</Filter>
     </ClInclude>
-    <ClInclude Include="source\display.h">
+    <ClInclude Include="source\world\world_generator.h">
+      <Filter>source\world</Filter>
+    </ClInclude>
+    <ClInclude Include="source\world\world.h">
+      <Filter>source\world</Filter>
+    </ClInclude>
+    <ClInclude Include="source\world\watermass.h">
+      <Filter>source\world</Filter>
+    </ClInclude>
+    <ClInclude Include="source\display\display.h">
       <Filter>source\display</Filter>
-    </ClInclude>
-    <ClInclude Include="source\watermass.h">
-      <Filter>source\world</Filter>
-    </ClInclude>
-    <ClInclude Include="source\world_generator.h">
-      <Filter>source\world</Filter>
-    </ClInclude>
-    <ClInclude Include="source\world.h">
-      <Filter>source\world</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
