@@ -7,8 +7,11 @@
 #include "VectorUtils3.h"
 #include "loadobj.h"
 #include "LoadTGA.h"
+#include <vector>
+#include "terrain.h"
 
-Model* GenerateTerrain(TextureData* tex);
-vec3 calculateNormal(GLfloat* vertexArray, int x, int z,  TextureData* tex);
-vec3 getVertex(GLfloat* verticeArray, int x, int z, TextureData* tex);
+
+Model* GenerateTerrain(const HeightGrid* height_grid);//TextureData* tex);
+vec3 calculateNormal(GLfloat* vertexArray, int x, int z, const HeightGrid* height_grid);
+vec3 getVertex(GLfloat* verticeArray, int x, int z, const HeightGrid* height_grid);
 #endif

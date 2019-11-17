@@ -1,14 +1,14 @@
 #include "world_generator.h"
 
 
-
+using namespace std;
 
 //generates the terrain model based on texture data
 //should change to height array data
-Model* GenerateTerrain(TextureData* tex)
+Model* GenerateTerrain(const HeightGrid* height_grid)//TextureData* tex)
 {
-	const int vertexCount = tex->width * tex->height;
-	int triangleCount = (tex->width - 1) * (tex->height - 1) * 2;
+	const int vertexCount = height_grid->grid_size_x * height_grid->grid_size_z;// tex->width* height_grid->grid_size_z;
+	int triangleCount = (height_grid->grid_size_x - 1) * (height_grid->grid_size_z - 1) * 2;
 	int x, z;
 
     GLfloat* vertexArray = new GLfloat[3*vertexCount];
@@ -17,39 +17,39 @@ Model* GenerateTerrain(TextureData* tex)
 	GLuint* indexArray = new GLuint[3 * triangleCount];
 
 
-	printf("bpp %d\n", tex->bpp);
-	for (x = 0; x < tex->width; x++)
-		for (z = 0; z < tex->height; z++)
+	//printf("bpp %d\n", tex->bpp);
+	for (x = 0; x < height_grid->grid_size_x; x++)
+		for (z = 0; z < height_grid->grid_size_z; z++)
 		{
 			// Vertex array. You need to scale this properly
-			vertexArray[(x + z * tex->width) * 3 + 0] = x / 1.0;
-			vertexArray[(x + z * tex->width) * 3 + 1] = tex->imageData[(x + z * tex->width) * (tex->bpp / 8)] / 20.0;
-			vertexArray[(x + z * tex->width) * 3 + 2] = z / 1.0;
+			vertexArray[(x + z * height_grid->grid_size_x) * 3 + 0] = x / 1.0;
+			vertexArray[(x + z * height_grid->grid_size_x) * 3 + 1] = height_grid->height_vector[z][x] / 10;//tex->imageData[(x + z * height_grid->grid_size_x) * (tex->bpp / 8)] / 20.0;
+			vertexArray[(x + z * height_grid->grid_size_x) * 3 + 2] = z / 1.0;
 
 
-			texCoordArray[(x + z * tex->width) * 2 + 0] = x; // (float)x / tex->width;
-			texCoordArray[(x + z * tex->width) * 2 + 1] = z; // (float)z / tex->height;
+			texCoordArray[(x + z * height_grid->grid_size_x) * 2 + 0] = x; // (float)x / height_grid->grid_size_x;
+			texCoordArray[(x + z * height_grid->grid_size_x) * 2 + 1] = z; // (float)z / height_grid->grid_size_z;
 		}
-	for (x = 0; x < tex->width; x++)
-		for (z = 0; z < tex->height; z++)
+	for (x = 0; x < height_grid->grid_size_x; x++)
+		for (z = 0; z < height_grid->grid_size_z; z++)
 		{
-			vec3 normal = calculateNormal(vertexArray, x, z, tex);
+			vec3 normal = calculateNormal(vertexArray, x, z, height_grid);
 
-			normalArray[(x + z * tex->width) * 3 + 0] = normal.x;
-			normalArray[(x + z * tex->width) * 3 + 1] = normal.y;
-			normalArray[(x + z * tex->width) * 3 + 2] = normal.z;
+			normalArray[(x + z * height_grid->grid_size_x) * 3 + 0] = normal.x;
+			normalArray[(x + z * height_grid->grid_size_x) * 3 + 1] = normal.y;
+			normalArray[(x + z * height_grid->grid_size_x) * 3 + 2] = normal.z;
 		}
-	for (x = 0; x < tex->width - 1; x++)
-		for (z = 0; z < tex->height - 1; z++)
+	for (x = 0; x < height_grid->grid_size_x - 1; x++)
+		for (z = 0; z < height_grid->grid_size_z - 1; z++)
 		{
 			// Triangle 1
-			indexArray[(x + z * (tex->width - 1)) * 6 + 0] = x + z * tex->width;
-			indexArray[(x + z * (tex->width - 1)) * 6 + 1] = x + (z + 1) * tex->width;
-			indexArray[(x + z * (tex->width - 1)) * 6 + 2] = x + 1 + z * tex->width;
+			indexArray[(x + z * (height_grid->grid_size_x - 1)) * 6 + 0] = x + z * height_grid->grid_size_x;
+			indexArray[(x + z * (height_grid->grid_size_x - 1)) * 6 + 1] = x + (z + 1) * height_grid->grid_size_x;
+			indexArray[(x + z * (height_grid->grid_size_x - 1)) * 6 + 2] = x + 1 + z * height_grid->grid_size_x;
 			// Triangle 2
-			indexArray[(x + z * (tex->width - 1)) * 6 + 3] = x + 1 + z * tex->width;
-			indexArray[(x + z * (tex->width - 1)) * 6 + 4] = x + (z + 1) * tex->width;
-			indexArray[(x + z * (tex->width - 1)) * 6 + 5] = x + 1 + (z + 1) * tex->width;
+			indexArray[(x + z * (height_grid->grid_size_x - 1)) * 6 + 3] = x + 1 + z * height_grid->grid_size_x;
+			indexArray[(x + z * (height_grid->grid_size_x - 1)) * 6 + 4] = x + (z + 1) * height_grid->grid_size_x;
+			indexArray[(x + z * (height_grid->grid_size_x - 1)) * 6 + 5] = x + 1 + (z + 1) * height_grid->grid_size_x;
 		}
 
 	// End of terrain generation
@@ -69,16 +69,16 @@ Model* GenerateTerrain(TextureData* tex)
 
 
 
-vec3 calculateNormal(GLfloat* vertexArray, int x, int z, TextureData* tex)
+vec3 calculateNormal(GLfloat* vertexArray, int x, int z, const HeightGrid* height_grid)
 {
 
-	vec3 this_vertice = getVertex(vertexArray, x, z, tex);
-	vec3 p1 = getVertex(vertexArray, x, (z - 1), tex);
-	vec3 p2 = getVertex(vertexArray, (x + 1), (z - 1),  tex);
-	vec3 p3 = getVertex(vertexArray, x + 1, z, tex);
-	vec3 p4 = getVertex(vertexArray, x, z + 1,  tex);
-	vec3 p5 = getVertex(vertexArray, x - 1, z + 1, tex);
-	vec3 p6 = getVertex(vertexArray, x - 1, z, tex);
+	vec3 this_vertice = getVertex(vertexArray, x, z, height_grid);
+	vec3 p1 = getVertex(vertexArray, x, (z - 1), height_grid);
+	vec3 p2 = getVertex(vertexArray, (x + 1), (z - 1), height_grid);
+	vec3 p3 = getVertex(vertexArray, x + 1, z, height_grid);
+	vec3 p4 = getVertex(vertexArray, x, z + 1, height_grid);
+	vec3 p5 = getVertex(vertexArray, x - 1, z + 1, height_grid);
+	vec3 p6 = getVertex(vertexArray, x - 1, z, height_grid);
 
 	vec3 v1 = SetVector(0.0f, 0.0f, 0.0f);
 	vec3 v2 = SetVector(0.0f, 0.0f, 0.0f);
@@ -119,15 +119,15 @@ vec3 calculateNormal(GLfloat* vertexArray, int x, int z, TextureData* tex)
 }
 
 
-vec3 getVertex(GLfloat* verticeArray, int x, int z, TextureData* tex)
+vec3 getVertex(GLfloat* verticeArray, int x, int z, const HeightGrid* height_grid)
 {
 	
-	if (x >= 0 && x < tex->width && z >= 0 && z < tex->height)
+	if (x >= 0 && x < height_grid->grid_size_x && z >= 0 && z < height_grid->grid_size_z)
 	{
 		vec3 vertex;
-		vertex.x = (GLfloat)verticeArray[(x + z * tex->width) * 3 + 0];
-		vertex.y = (GLfloat)verticeArray[(x + z * tex->width) * 3 + 1];
-		vertex.z = (GLfloat)verticeArray[(x + z * tex->width) * 3 + 2];
+		vertex.x = (GLfloat)verticeArray[(x + z * height_grid->grid_size_x) * 3 + 0];
+		vertex.y = (GLfloat)verticeArray[(x + z * height_grid->grid_size_x) * 3 + 1];
+		vertex.z = (GLfloat)verticeArray[(x + z * height_grid->grid_size_x) * 3 + 2];
 		return vertex;
 	}
 	else

@@ -19,9 +19,6 @@
     <ClCompile Include="common\VectorUtils3.c">
       <Filter>MicroGlut</Filter>
     </ClCompile>
-    <ClCompile Include="source\main.cpp">
-      <Filter>source\display</Filter>
-    </ClCompile>
     <ClCompile Include="source\world\world_generator.cpp">
       <Filter>source\world</Filter>
     </ClCompile>
@@ -36,6 +33,15 @@
     </ClCompile>
     <ClCompile Include="source\display\display.cpp">
       <Filter>source\display</Filter>
+    </ClCompile>
+    <ClCompile Include="source\main.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\world\terrain.cpp">
+      <Filter>source\world</Filter>
+    </ClCompile>
+    <ClCompile Include="source\world\height_grid.cpp">
+      <Filter>source\world</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +111,12 @@
     </ClInclude>
     <ClInclude Include="source\display\display.h">
       <Filter>source\display</Filter>
+    </ClInclude>
+    <ClInclude Include="source\world\terrain.h">
+      <Filter>source\world</Filter>
+    </ClInclude>
+    <ClInclude Include="source\world\height_grid.h">
+      <Filter>source\world</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

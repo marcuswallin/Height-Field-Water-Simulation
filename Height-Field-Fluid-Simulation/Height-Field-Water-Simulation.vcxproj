@@ -88,6 +88,8 @@
     <ClCompile Include="source\display\cameracontrol.c" />
     <ClCompile Include="source\display\display.cpp" />
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\world\height_grid.cpp" />
+    <ClCompile Include="source\world\terrain.cpp" />
     <ClCompile Include="source\world\watermass.cpp" />
     <ClCompile Include="source\world\world.cpp" />
     <ClCompile Include="source\world\world_generator.cpp" />
@@ -108,6 +110,8 @@
     <ClInclude Include="common\Windows\MicroGlut.h" />
     <ClInclude Include="common\zpr.h" />
     <ClInclude Include="source\display\display.h" />
+    <ClInclude Include="source\world\height_grid.h" />
+    <ClInclude Include="source\world\terrain.h" />
     <ClInclude Include="source\world\watermass.h" />
     <ClInclude Include="source\world\world.h" />
     <ClInclude Include="source\world\world_generator.h" />

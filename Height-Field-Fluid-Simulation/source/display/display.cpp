@@ -97,7 +97,7 @@ void display(void)
 	glUseProgram(ground_program);
 	glUniform1i(glGetUniformLocation(ground_program, "tex"), 0);
 	//DrawModel(m, ground_program, "inPosition", "inNormal", "inTexCoord");
-	DrawModel(world.terrain_model, ground_program, "inPosition", "inNormal", "inTexCoord");
+	DrawModel(world.terrain.model, ground_program, "inPosition", "inNormal", "inTexCoord");
 	//DrawModel(skybox_model, ground_program, "inPosition", "inNormal", "inTexCoord");
 	glutSwapBuffers();
 }

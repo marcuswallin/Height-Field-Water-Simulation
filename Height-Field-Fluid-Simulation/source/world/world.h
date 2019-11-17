@@ -1,6 +1,6 @@
 #pragma once
-#ifndef WATERMASS_H
-#define WATERMASS_H
+#ifndef WORLD_H
+#define WORLD_H
 
 #include "MicroGlut.h"
 #include "LoadTGA.h"
@@ -8,6 +8,7 @@
 #include "loadobj.h"
 //change name to terrain.h
 #include "world_generator.h"
+#include "terrain.h"
 
 class World {
 public:
@@ -17,14 +18,14 @@ public:
 	*/
 	World(char*);
 	World() = default;
-	
 
-	Model* terrain_model;
+	Terrain terrain;
+	//Model* terrain_model;
 private:
 	//mprobably not needed
-	TextureData terrain_texture;
-	int grid_size_x;
-	int grid_size_z;
+	//TextureData terrain_texture;
+	//int grid_size_x;
+	//int grid_size_z;
 	float world_scale;
 };
 
