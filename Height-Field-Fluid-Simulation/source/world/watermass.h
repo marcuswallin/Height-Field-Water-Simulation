@@ -18,9 +18,16 @@ public:
 	double x_offset;
 	double z_offset;
 
+	void init_water_tex();
+	GLuint program;
+
 private:
 	void gen_water_from_terrain(const Terrain&,
 		int x_start, int x_end, int z_start, int z_end, float offset);
+
+	GLuint water_height_tex;
+
+
 
 };
 

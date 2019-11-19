@@ -1,7 +1,7 @@
 #version 150
 
 out vec4 outColor;
-uniform sampler2D tex;
+uniform sampler2D waterHeight;
 uniform mat4 camMatrix;
 
 in vec3 exSurface;
@@ -10,6 +10,10 @@ in vec2 texCoord;
 
 void main(void)
 {
+    vec4 pos = gl_FragCoord;
+
+
+
 	float diffuse, shade;
 	vec3 light = vec3(-1,1,-1);
 	mat3 lightMatrix = mat3(camMatrix);
@@ -20,8 +24,8 @@ void main(void)
 	diffuse = clamp(diffuse, 0, 1);
 	shade = diffuse;
 
-
-
-    outColor = vec4(shade, shade, shade, 1.0) * texture(tex, texCoord);
-
+    //outColor =  shade*vec4(0.1,0.1,1, 1.0);
+	
+    outColor =  texture(waterHeight, texCoord);
+    
 }

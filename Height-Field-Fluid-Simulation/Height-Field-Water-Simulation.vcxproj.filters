@@ -80,6 +80,12 @@
     <None Include="source\shaders\terrain.vert">
       <Filter>shaders</Filter>
     </None>
+    <None Include="source\shaders\water.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="source\shaders\water.vert">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common\GL_utilities.h">

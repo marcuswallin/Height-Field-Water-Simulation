@@ -14,4 +14,7 @@
 void init(void);
 void display(void);
 void draw_sky_box(const mat4* mtv_matrix);
+
+void init_water_tex(void);
+
 #endif

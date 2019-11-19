@@ -5,7 +5,7 @@
 using namespace std;
 
 World::World(char* terrain_tex_name) : 
-	terrain(terrain_tex_name), water(terrain_tex_name, 0, 20, 0, 20, 10) {
+	terrain(terrain_tex_name), water(terrain_tex_name, 50, 70, 50, 70, 10) {
 
 	world_scale = 1;
 }
