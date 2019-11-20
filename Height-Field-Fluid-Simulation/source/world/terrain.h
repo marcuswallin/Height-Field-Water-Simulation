@@ -12,10 +12,14 @@
 class Terrain : public HeightGrid {
 public:
 	Terrain() = default;
+	
+	//initiate terrain from a texture file
 	Terrain(char* ground_gen_file);
-	//Model* model;
+	
 private:
 	TextureData terrain_texture;
+
+	//generate a 2D-array from the terrain_texture
 	void tex_to_vector();
 
 };

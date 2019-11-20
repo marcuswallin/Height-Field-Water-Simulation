@@ -14,14 +14,17 @@ public:
 	HeightGrid() = default;
 	HeightGrid(int grid_x, int grid_z);
 
-	//rows are z, columns are x
-	//std::vector<std::vector<GLfloat>> height_vector;
+	/*
+	contains information about height of the grid;
+	rows are z, columns are x
+	possibly should be another struct in the future*/
 	vec4* height_array;
 	int grid_size_x;
 	int grid_size_z;
 
 	Model* model;
 
+	//returns the element at pos x, z
 	vec4* at(int x, int z);
 
 private:
