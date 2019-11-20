@@ -4,7 +4,7 @@
 
 using namespace std;
 
-//initiate terrain from a texture file
+
 Terrain::Terrain(char * ground_gen_file) {
 	LoadTGATextureData(ground_gen_file, &terrain_texture);
 	grid_size_x = terrain_texture.width;
@@ -13,7 +13,7 @@ Terrain::Terrain(char * ground_gen_file) {
 	model = GenerateTerrain(this);
 }
 
-//generate a 2D-array from the terrain_texture
+
 void Terrain::tex_to_vector() {
 
 	height_array = new vec4[grid_size_x * grid_size_z];
