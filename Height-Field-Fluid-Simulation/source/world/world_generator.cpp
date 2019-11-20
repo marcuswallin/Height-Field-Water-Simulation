@@ -23,7 +23,7 @@ Model* GenerateTerrain(const HeightGrid* height_grid)//TextureData* tex)
 		{
 			// Vertex array. You need to scale this properly
 			vertexArray[(x + z * height_grid->grid_size_x) * 3 + 0] = x / 1.0;
-			vertexArray[(x + z * height_grid->grid_size_x) * 3 + 1] = height_grid->height_vector[z][x] / 10;//tex->imageData[(x + z * height_grid->grid_size_x) * (tex->bpp / 8)] / 20.0;
+			vertexArray[(x + z * height_grid->grid_size_x) * 3 + 1] = height_grid->height_array[x+z*height_grid->grid_size_x].x / 10;//tex->imageData[(x + z * height_grid->grid_size_x) * (tex->bpp / 8)] / 20.0;
 			vertexArray[(x + z * height_grid->grid_size_x) * 3 + 2] = z / 1.0;
 
 

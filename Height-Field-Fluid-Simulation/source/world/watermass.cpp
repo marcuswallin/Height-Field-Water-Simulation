@@ -5,11 +5,11 @@ using namespace std;
 
 WaterMass::WaterMass(const Terrain& terrain,
 	int x_start, int x_end, int z_start, int z_end, float offset) : 
-	x_offset(x_start), z_offset(z_start){
-	
+	HeightGrid{ x_end - x_start,  z_end - z_start }, x_offset(x_start), z_offset(z_start)  {
+	//grid_size_x = x_end - x_start;
+	//grid_size_z = x_end - x_start;
 	gen_water_from_terrain(terrain, x_start, x_end, z_start, z_end, offset);
-	grid_size_x = x_end-x_start;
-	grid_size_z = x_end-x_start;
+
 	model = GenerateTerrain(this);
 }
 
@@ -17,10 +17,12 @@ WaterMass::WaterMass(const Terrain& terrain,
 void WaterMass::gen_water_from_terrain(const Terrain& terrain,
 	int x_start, int x_end, int z_start, int z_end, float offset) {
 	
-	height_vector.resize(z_end-z_start, vector<GLfloat>(x_end - x_start));
+	//height_vector.resize(z_end-z_start, vector<GLfloat>(x_end - x_start));
+	height_array = new vec4[(z_end - z_start) * (x_end - x_start)];
 	for (int z = 0; z < z_end-z_start; ++z)
 		for (int x = 0; x < x_end - x_start; ++x) {
-			height_vector[z][x] = terrain.height_vector[z + z_start][x + x_start] + offset;
+			at(x,z)->x = 
+				terrain.height_array[x + x_start + (z + z_start)*(terrain.grid_size_x)].x + offset;
 		}
 }
 
@@ -34,8 +36,8 @@ void WaterMass::init_water_tex() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	//change this part later
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, grid_size_x, grid_size_z, 0,
-		GL_RED, GL_FLOAT, &height_vector[0][0]);//&smoke_array[0].pos.x);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, grid_size_x, grid_size_z, 0,
+		GL_RGBA, GL_FLOAT, &height_array[0].x);//&smoke_array[0].pos.x);
 	//water_program should be coitained by watermass
 	glUniform1i(glGetUniformLocation(program, "waterHeight"), 15);
 

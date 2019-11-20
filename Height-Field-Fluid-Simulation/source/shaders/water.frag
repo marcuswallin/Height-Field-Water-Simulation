@@ -26,6 +26,6 @@ void main(void)
 
     //outColor =  shade*vec4(0.1,0.1,1, 1.0);
 	
-    outColor =  texture(waterHeight, texCoord);
+    outColor =  texture(waterHeight, texCoord)/100;
     
 }

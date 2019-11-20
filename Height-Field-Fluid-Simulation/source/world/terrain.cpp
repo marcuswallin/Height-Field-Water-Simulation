@@ -14,9 +14,10 @@ Terrain::Terrain(char * ground_gen_file) {
 
 //generate a 2D-vector from the terrain_texture
 void Terrain::tex_to_vector() {
-	height_vector.resize(grid_size_z, vector<GLfloat>(grid_size_x));
+
+	height_array = new vec4[grid_size_x * grid_size_z];
 	for (int z = 0; z < grid_size_z; z++)
 		for (int x = 0; x < grid_size_x; x++){
-			height_vector[z][x] = terrain_texture.imageData[(x + z * terrain_texture.width) * (terrain_texture.bpp / 8)];
+			at(x,z)->x = terrain_texture.imageData[(x + z * terrain_texture.width) * (terrain_texture.bpp / 8)];
 		}
 }
