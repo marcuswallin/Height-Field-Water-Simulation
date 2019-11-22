@@ -26,7 +26,12 @@ void main(void)
 	mat4 mdlMat = mdlMatrix;
 	vec4 heights = texture(waterHeight, vec2(tex_x, tex_z));
 	
-    mdlMat[3][1] = heights.y + heights.x;
+	float water_depth = heights.x;
+	if (water_depth < 0.001){
+		water_depth = -0.1;
+		}
+
+    mdlMat[3][1] = heights.y + water_depth;
 	
 	exSurface = (mdlMat * vec4(inPosition, 1.0)).xyz;
 	gl_Position = projMatrix * camMatrix *mdlMat * vec4(inPosition, 1.0);

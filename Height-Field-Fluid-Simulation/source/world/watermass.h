@@ -18,8 +18,9 @@ public:
 
 	int x_offset;
 	int z_offset;
-	double friction_c = 0.01;
+	double friction_c = 0.001;
 	double gravity = 9.82;
+	 
 
 	void init_water_tex();
 	void calculate_movements(int time_diff);
@@ -31,6 +32,9 @@ private:
 
 	GLuint water_height_tex;
 
+	float ground_e = 0.0001;
+	float a_vel = 0.5;
+
 	//stores velocities in the x and z parts
 	HeightGrid velocities;
 
@@ -38,6 +42,8 @@ private:
 	vec4* get_velocity(int x, int z, int x_offset, int z_offset);
 	float get_hbar_x(int x, int z, int x_offset, int z_offset);
 	float get_hbar_z(int x, int z, int x_offset, int z_offset);
+	bool WaterMass::is_reflective_x(int x, int z);
+	bool WaterMass::is_reflective_z(int x, int z);
 	void WaterMass::velocity_integration(void);
 
 };

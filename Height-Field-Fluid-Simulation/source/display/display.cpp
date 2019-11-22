@@ -36,9 +36,9 @@ void init(void)
 	//glEnable(GL_CULL_FACE);
 	//glCullFace(GL_TRUE);
 
-	vec3 start_pos = SetVector(70, 10,120);
-	int x_size = 50;
-	int z_size = 50;
+	vec3 start_pos = SetVector(125, 10,150);
+	int x_size =30;
+	int z_size = 30;
 	initControls(start_pos, 0, M_PI / 2);
 
 	// Load and compile shader
@@ -52,7 +52,8 @@ void init(void)
 	skybox_model = LoadModelPlus((char*)"objects/skybox.obj");
 	
 	world = World("textures/fft-terrain.tga", 
-		start_pos.x - x_size/2, start_pos.x + x_size/2, start_pos.z - 20 - z_size/2, start_pos.z - 20 + z_size/2, 4);
+		start_pos.x - x_size/2, start_pos.x + x_size/2, start_pos.z - 20 - z_size/2, 
+		start_pos.z - 20 + z_size/2,2);
 	world.water.program = water_program;
 
 	//send matrices
@@ -110,7 +111,7 @@ void display(void)
 	model_world = IdentityMatrix(); //change this
 	model_to_view = cam_matrix * model_world;
 
-	//cout << get_view_pos().x << " "  << get_view_pos().y << " " << get_view_pos().z << endl;
+	cout << get_view_pos().x << " "  << get_view_pos().y << " " << get_view_pos().z << endl;
 
 	glUseProgram(sky_program);
 	draw_sky_box(&model_to_view);

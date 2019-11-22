@@ -5,9 +5,9 @@ using namespace std;
 
 //velocities initiated as staggered grid
 WaterMass::WaterMass(Terrain& terrain,
-	int x_start, int x_end, int z_start, int z_end, float offset) : 
+	int x_start, int x_end, int z_start, int z_end, float offset) :
 	HeightGrid{ x_end - x_start,  z_end - z_start, false }, x_offset(x_start), z_offset(z_start),
-	velocities{ x_end - x_start + 1,  (z_end - z_start)*2 + 1, true}{
+	velocities{ x_end - x_start + 1,  (z_end - z_start) * 2 + 1, true }{
 
 	gen_water_from_terrain(terrain, x_start, x_end, z_start, z_end, offset);
 	model = GenerateTerrain(this, true);
@@ -18,13 +18,13 @@ WaterMass::WaterMass(const WaterMass& w) : HeightGrid(w) {};
 //generates the height_vetor from the terrain
 void WaterMass::gen_water_from_terrain(Terrain& terrain,
 	int x_start, int x_end, int z_start, int z_end, float offset) {
-	
+
 	//height_vector.resize(z_end-z_start, vector<GLfloat>(x_end - x_start));
 	height_array = new vec4[(z_end - z_start) * (x_end - x_start)];
-	for (int z = 0; z < z_end-z_start; ++z)
+	for (int z = 0; z < z_end - z_start; ++z)
 		for (int x = 0; x < x_end - x_start; ++x) {
 			//stores water depth in x
-			at(x, z)->x = offset;	
+			at(x, z)->x = offset;
 			//stores ground height in y
 			at(x, z)->y = terrain.at(x + x_start, z + z_start)->x;
 		}
@@ -50,13 +50,16 @@ void WaterMass::init_water_tex() {
 
 //timestep in milliseconds
 void WaterMass::calculate_movements(int timestep_length) {
-	HeightGrid height_copy { *this };
+	HeightGrid height_copy{ *this };
 	//float time = (float)glutGet(GLUT_ELAPSED_TIME) / 100.0;
 	for (int z = 0; z < grid_size_z; ++z) {
 		for (int x = 0; x < grid_size_x; x++)
 		{
 			float dhdt = get_height_derivative(x, z);
-			height_copy.at(x, z)->x += dhdt*timestep_length/1000;
+			height_copy.at(x, z)->x += dhdt * timestep_length / 1000;
+			if (height_copy.at(x, z)->x < 0){
+				height_copy.at(x, z)->x = 0;
+			}
 		}
 	}
 	height_array = height_copy.height_array;
@@ -144,28 +147,60 @@ void WaterMass::velocity_integration(void) {
 			vec4* h = at(x, z);
 
 			float deltat = (20.0 / 1000.0);
-			if (x >= grid_size_x-1) {
+			//reflective
+			if (x >= grid_size_x-1 || is_reflective_x(x,z)) {
 				v_xplus->x = 0;
 			}
 			else {
 				vec4* h_xplus = at(x + 1, z);
 				v_xplus->x += -(1-friction_c) * (gravity / scale) * deltat *
 					((h_xplus->x + h_xplus->y) - (h->x + h->y));
+				if (v_xplus->x > a_vel * 1 / deltat) {
+					v_xplus->x = a_vel * 1 / deltat;
+				}
 				*v_xplus *= (1 - friction_c);
 			}
 
-			
-			if (z >= grid_size_z - 1) {
+			//reflective
+			if (z >= grid_size_z - 1 || is_reflective_z(x, z)) {
 				v_zplus->z = 0;
 			}
 			else {
 				vec4* h_zplus = at(x, z + 1);
 				v_zplus->z += -(gravity / scale) * deltat *
 					((h_zplus->x + h_zplus->y) - (h->x + h->y));
+				if (v_zplus->z > a_vel * 1 / deltat) {
+					v_zplus->z = a_vel * 1 / deltat;
+				}
 				*v_zplus *= (1 - friction_c);
 			}
 		}
 	}
+}
+
+
+//checks if water is so close to the ground that it should be dry 
+//should have input either x_offset = 1 or z_offset = 1
+bool WaterMass::is_reflective_x(int x, int z) {
+
+	vec4* h = at(x, z);
+	vec4* h_plus = at(x+1, z);
+	bool first_cond = h->x <= ground_e && h->y > (h_plus->x + h_plus->y);
+	bool second_cond = h_plus->x <= ground_e && h_plus->y > (h->x + h->y);
+	return first_cond || second_cond;
+
+}
+
+
+//same as above but for z
+bool WaterMass::is_reflective_z(int x, int z) {
+
+	vec4* h = at(x, z);
+	vec4* h_plus = at(x, z+1);
+	bool first_cond = h->x <= ground_e && h->y > (h_plus->x + h_plus->y);
+	bool second_cond = h_plus->x <= ground_e && h_plus->y > (h->x + h->y);
+	return first_cond || second_cond;
+
 }
 
 
