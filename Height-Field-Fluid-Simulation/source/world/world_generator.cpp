@@ -5,7 +5,7 @@ using namespace std;
 
 //generates the terrain model based on texture data
 //should change to height array data
-Model* GenerateTerrain(const HeightGrid* height_grid)//TextureData* tex)
+Model* GenerateTerrain(HeightGrid* height_grid, bool generate_zero)//TextureData* tex)
 {
 	const int vertexCount = height_grid->grid_size_x * height_grid->grid_size_z;// tex->width* height_grid->grid_size_z;
 	int triangleCount = (height_grid->grid_size_x - 1) * (height_grid->grid_size_z - 1) * 2;
@@ -23,7 +23,10 @@ Model* GenerateTerrain(const HeightGrid* height_grid)//TextureData* tex)
 		{
 			// Vertex array. You need to scale this properly
 			vertexArray[(x + z * height_grid->grid_size_x) * 3 + 0] = x / 1.0;
-			vertexArray[(x + z * height_grid->grid_size_x) * 3 + 1] = height_grid->height_array[x+z*height_grid->grid_size_x].x / 10;//tex->imageData[(x + z * height_grid->grid_size_x) * (tex->bpp / 8)] / 20.0;
+			if(!generate_zero)
+				vertexArray[(x + z * height_grid->grid_size_x) * 3 + 1] = height_grid->at(x,z)->x;//tex->imageData[(x + z * height_grid->grid_size_x) * (tex->bpp / 8)] / 20.0;
+			else
+				vertexArray[(x + z * height_grid->grid_size_x) * 3 + 1] = 0;
 			vertexArray[(x + z * height_grid->grid_size_x) * 3 + 2] = z / 1.0;
 
 

@@ -11,7 +11,7 @@
 #include "terrain.h"
 
 
-Model* GenerateTerrain(const HeightGrid* height_grid);//TextureData* tex);
+Model* GenerateTerrain(HeightGrid* height_grid, bool);//TextureData* tex);
 vec3 calculateNormal(GLfloat* vertexArray, int x, int z, const HeightGrid* height_grid);
 vec3 getVertex(GLfloat* verticeArray, int x, int z, const HeightGrid* height_grid);
 #endif

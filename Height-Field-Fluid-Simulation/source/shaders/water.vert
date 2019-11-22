@@ -8,6 +8,10 @@ out vec3 exNormal;
 out vec3 exSurface;
 uniform sampler2D waterHeight;
 
+uniform int grid_x;
+uniform int grid_z;
+
+
 
 uniform mat4 projMatrix;
 uniform mat4 mdlMatrix;
@@ -15,17 +19,17 @@ uniform mat4 camMatrix;
 
 void main(void)
 {
-   	//hard coded for now
-	int offset_x = 60;
-    int offset_z = 60;
 
-	float tex_x = mod(inPosition.x - offset_x, 20) / 20;
-	float tex_z = mod(inPosition.z - offset_z, 20) / 20;
+	float tex_x = mod(int(inPosition.x)+0.001 , grid_x) / grid_x;
+	
+	float tex_z = mod(int(inPosition.z)+0.001, grid_z) / grid_z;
 	mat4 mdlMat = mdlMatrix;
-    mdlMat[3][1] = mdlMatrix[3][1]+ texture(waterHeight, vec2(tex_x, tex_z)).x / 10;
-
+	vec4 heights = texture(waterHeight, vec2(tex_x, tex_z));
+	
+    mdlMat[3][1] = heights.y + heights.x;
+	
 	exSurface = (mdlMat * vec4(inPosition, 1.0)).xyz;
-	gl_Position = projMatrix * mdlMat * vec4(inPosition, 1.0);
+	gl_Position = projMatrix * camMatrix *mdlMat * vec4(inPosition, 1.0);
 
 
 	mat3 normalMatrix = mat3(mdlMat);

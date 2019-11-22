@@ -10,10 +10,13 @@
 #include <iostream>
 #include <string>
 #include "display.h"
+
 //#include "world/world_generator.h"
 
 
 using namespace std;
+
+
 
 mat4 worldToViewMatrix, modelToWorldMatrix, projectionMatrix;
 Model* m, * skybox_model,* ground_model;
@@ -33,7 +36,9 @@ void init(void)
 	//glEnable(GL_CULL_FACE);
 	//glCullFace(GL_TRUE);
 
-	vec3 start_pos = SetVector(100, 10, 100);
+	vec3 start_pos = SetVector(70, 10,120);
+	int x_size = 50;
+	int z_size = 50;
 	initControls(start_pos, 0, M_PI / 2);
 
 	// Load and compile shader
@@ -46,7 +51,8 @@ void init(void)
 	m = LoadModelPlus((char*)"objects/teapot.obj");
 	skybox_model = LoadModelPlus((char*)"objects/skybox.obj");
 	
-	world = World("textures/fft-terrain.tga");
+	world = World("textures/fft-terrain.tga", 
+		start_pos.x - x_size/2, start_pos.x + x_size/2, start_pos.z - 20 - z_size/2, start_pos.z - 20 + z_size/2, 4);
 	world.water.program = water_program;
 
 	//send matrices
@@ -60,7 +66,9 @@ void init(void)
 	glUseProgram(water_program);
 	glUniformMatrix4fv(glGetUniformLocation(water_program, "camMatrix"), 1, GL_TRUE, worldToViewMatrix.m);
 	glUniformMatrix4fv(glGetUniformLocation(water_program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
-
+	//vec4 p{ world.water.x_offset, world.water.z_offset, world.water.grid_size_x, world.water.grid_size_z };
+	glUniform1i(glGetUniformLocation(water_program, "grid_x"), world.water.grid_size_x);
+	glUniform1i(glGetUniformLocation(water_program, "grid_z"), world.water.grid_size_z);
 
 	glUseProgram(sky_program);
 	glUniformMatrix4fv(glGetUniformLocation(sky_program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
@@ -77,6 +85,12 @@ void init(void)
 
 	world.water.init_water_tex();
 	
+
+
+	//temporary test
+	//world.water.calculate_movements(20);
+
+
 	printError("init finished");
 }
 
@@ -96,6 +110,7 @@ void display(void)
 	model_world = IdentityMatrix(); //change this
 	model_to_view = cam_matrix * model_world;
 
+	//cout << get_view_pos().x << " "  << get_view_pos().y << " " << get_view_pos().z << endl;
 
 	glUseProgram(sky_program);
 	draw_sky_box(&model_to_view);
@@ -114,11 +129,17 @@ void display(void)
 	glUniform1i(glGetUniformLocation(ground_program, "tex"), 0);
 	DrawModel(m, ground_program, "inPosition", "inNormal", "inTexCoord");
 	DrawModel(world.terrain.model, ground_program, "inPosition", "inNormal", "inTexCoord");
+	
+	
 	glUseProgram(water_program);
-	model_world = T(world.water.x_offset,0, world.water.z_offset); //change this
+	model_world = T(world.water.x_offset, 0, world.water.z_offset); //change this
 	model_to_view = cam_matrix * model_world;
-	glUniformMatrix4fv(glGetUniformLocation(water_program, "mdlMatrix"), 1, GL_TRUE, model_to_view.m);
+	glUniformMatrix4fv(glGetUniformLocation(water_program, "camMatrix"), 1, GL_TRUE, cam_matrix.m);
+	glUniformMatrix4fv(glGetUniformLocation(water_program, "mdlMatrix"), 1, GL_TRUE, model_world.m);
 
+	world.water.calculate_movements(20);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, world.water.grid_size_x, world.water.grid_size_z, 0,
+		GL_RGBA, GL_FLOAT, &world.water.height_array[0].x);
 	glUniform1i(glGetUniformLocation(water_program, "waterHeight"), 15);
 	DrawModel(world.water.model, ground_program, "inPosition", "inNormal", "inTexCoord");
 

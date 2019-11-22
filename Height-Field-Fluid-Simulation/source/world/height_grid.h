@@ -12,7 +12,8 @@
 class HeightGrid {
 public:
 	HeightGrid() = default;
-	HeightGrid(int grid_x, int grid_z);
+	HeightGrid(int grid_x, int grid_z, bool intitiate_array);
+	HeightGrid(const HeightGrid &h);
 
 	/*
 	contains information about height of the grid;
@@ -23,6 +24,9 @@ public:
 	int grid_size_z;
 
 	Model* model;
+
+	//indicates the scale of the grid (if grid length is 0.2 meter, this value is 0.2)
+	float scale = 1;
 
 	//returns the element at pos x, z
 	vec4* at(int x, int z);

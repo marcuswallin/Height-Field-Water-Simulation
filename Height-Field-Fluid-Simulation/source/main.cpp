@@ -19,16 +19,17 @@
 using namespace std;
 
 
+int time_diff;
 void timer(int i)
 {
-	glutTimerFunc(20, &timer, i);
+	glutTimerFunc(time_diff, &timer, i);
 	glutPostRedisplay();
 }
 
 
 int main(int argc, char *argv[])
 {
-
+	time_diff = 20;
 	AllocConsole();
 	freopen("CONOUT$", "a", stdout);
 	glutInit(&argc, argv);
