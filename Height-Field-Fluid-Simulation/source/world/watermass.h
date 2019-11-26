@@ -13,7 +13,7 @@ class WaterMass : public HeightGrid{
 public:
 	WaterMass() = default;
 	WaterMass(Terrain& terrain,
-		int x_start, int x_end, int z_start, int z_end, float offset);
+		int x_start, int x_end, int z_start, int z_end, float offset, int resolution);
 	WaterMass(const WaterMass& w); 
 
 	int x_offset;
@@ -28,12 +28,13 @@ public:
 
 private:
 	void gen_water_from_terrain( Terrain&,
-		int x_start, int x_end, int z_start, int z_end, float offset);
+		int x_start, int x_end, int z_start, int z_end, float offset, int resolution);
 
 	GLuint water_height_tex;
 
 	float ground_e = 0.0001;
 	float a_vel = 0.5;
+	int resolution;
 
 	//stores velocities in the x and z parts
 	HeightGrid velocities;

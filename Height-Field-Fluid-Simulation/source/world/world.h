@@ -18,7 +18,7 @@ public:
 	initializes grid_size based on terrain_texture
 	*/
 	World(char*, 
-		int x_start, int x_end, int z_start, int z_end, float);
+		int x_start, int x_end, int z_start, int z_end, float, int water_resolution);
 	World() = default;
 
 	Terrain terrain;

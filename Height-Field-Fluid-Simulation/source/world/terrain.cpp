@@ -10,7 +10,7 @@ Terrain::Terrain(char * ground_gen_file) {
 	grid_size_x = terrain_texture.width;
 	grid_size_z = terrain_texture.height;
 	tex_to_vector();
-	model = GenerateTerrain(this, false);
+	model = GenerateTerrain(this, false, 1);
 }
 
 

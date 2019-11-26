@@ -39,6 +39,7 @@ void init(void)
 	vec3 start_pos = SetVector(130, 10,150);
 	int x_size =30;
 	int z_size = 30;
+	int water_resolution = 3;
 	initControls(start_pos, 0, M_PI / 2);
 
 	// Load and compile shader
@@ -53,7 +54,7 @@ void init(void)
 	
 	world = World("textures/fft-terrain.tga", 
 		start_pos.x - x_size/2, start_pos.x + x_size/2, start_pos.z - 20 - z_size/2, 
-		start_pos.z - 20 + z_size/2,2);
+		start_pos.z - 20 + z_size/2,2, water_resolution);
 	world.water.program = water_program;
 
 	//send matrices
@@ -67,7 +68,9 @@ void init(void)
 	glUseProgram(water_program);
 	glUniformMatrix4fv(glGetUniformLocation(water_program, "camMatrix"), 1, GL_TRUE, worldToViewMatrix.m);
 	glUniformMatrix4fv(glGetUniformLocation(water_program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+	
 	//vec4 p{ world.water.x_offset, world.water.z_offset, world.water.grid_size_x, world.water.grid_size_z };
+    glUniform1i(glGetUniformLocation(water_program, "resolution"), water_resolution);
 	glUniform1i(glGetUniformLocation(water_program, "grid_x"), world.water.grid_size_x);
 	glUniform1i(glGetUniformLocation(water_program, "grid_z"), world.water.grid_size_z);
 

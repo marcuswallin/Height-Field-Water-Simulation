@@ -10,6 +10,7 @@ uniform sampler2D waterHeight;
 
 uniform int grid_x;
 uniform int grid_z;
+uniform int resolution;
 
 
 
@@ -20,9 +21,9 @@ uniform mat4 camMatrix;
 void main(void)
 {
 
-	float tex_x = mod(int(inPosition.x)+0.001 , grid_x) / grid_x;
+	float tex_x = mod(float(inPosition.x)+0.001 , grid_x / resolution ) / (grid_x / resolution);
 	
-	float tex_z = mod(int(inPosition.z)+0.001, grid_z) / grid_z;
+	float tex_z = mod(float(inPosition.z)+0.001, grid_z / resolution) / (grid_z / resolution);
 	mat4 mdlMat = mdlMatrix;
 	vec4 heights = texture(waterHeight, vec2(tex_x, tex_z));
 	
