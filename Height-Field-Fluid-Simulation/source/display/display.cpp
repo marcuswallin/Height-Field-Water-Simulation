@@ -1,27 +1,17 @@
-
 #pragma once
-#include "MicroGlut.h"
 
-#include "GL_utilities.h"
-#include "VectorUtils3.h"
-#include "loadobj.h"
-#include "LoadTGA.h"
 #include "cameracontrol.c"
 #include <iostream>
-#include <string>
 #include "display.h"
 
-//#include "world/world_generator.h"
-
-
 using namespace std;
+int time_diff;
 
-
-
-mat4 worldToViewMatrix, modelToWorldMatrix, projectionMatrix;
-Model* m, * skybox_model,* ground_model;
-GLuint ground_program, sky_program, water_program, water_height;
+Model* m, * skybox_model;
+GLuint sky_program;
 TextureData ground_color_tex, skybox_tex, water_color_tex;
+
+bool calc_water = false;
 
 //World world{};
 World world;
@@ -36,49 +26,31 @@ void init(void)
 	//glEnable(GL_CULL_FACE);
 	//glCullFace(GL_TRUE);
 
-	vec3 start_pos = SetVector(130, 10,150);
-	int x_size =30;
-	int z_size = 30;
+	//vec3 start_pos = SetVector(120, 10,140);
+	vec3 start_pos = SetVector(50, 10,120);
+
+	int x_size =50;
+	int z_size = 50;
 	int water_resolution = 3;
 	initControls(start_pos, 0, M_PI / 2);
-
-	// Load and compile shader
-	ground_program = loadShaders("source/shaders/terrain.vert", "source/shaders/terrain.frag");
+	
 	sky_program = loadShaders("source/shaders/skybox.vert", "source/shaders/skybox.frag");
-	water_program = loadShaders("source/shaders/water.vert", "source/shaders/water.frag");
-
 
 	// Upload geometry to the GPU:
 	m = LoadModelPlus((char*)"objects/teapot.obj");
 	skybox_model = LoadModelPlus((char*)"objects/skybox.obj");
 	
 	world = World("textures/fft-terrain.tga", 
-		start_pos.x - x_size/2, start_pos.x + x_size/2, start_pos.z - 20 - z_size/2, 
-		start_pos.z - 20 + z_size/2,2, water_resolution);
-	world.water.program = water_program;
-
-	//send matrices
-	glUseProgram(ground_program);
-	projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 250.0);
-	worldToViewMatrix = cameraPlacement();
-	modelToWorldMatrix = IdentityMatrix();
-	glUniformMatrix4fv(glGetUniformLocation(ground_program, "camMatrix"), 1, GL_TRUE, worldToViewMatrix.m);
-	glUniformMatrix4fv(glGetUniformLocation(ground_program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+		start_pos.x - x_size/2, start_pos.x + x_size/2, start_pos.z - 30 - z_size/2, 
+		start_pos.z - 30 + z_size/2,0.5, water_resolution);
 	
-	glUseProgram(water_program);
-	glUniformMatrix4fv(glGetUniformLocation(water_program, "camMatrix"), 1, GL_TRUE, worldToViewMatrix.m);
-	glUniformMatrix4fv(glGetUniformLocation(water_program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
-	
-	//vec4 p{ world.water.x_offset, world.water.z_offset, world.water.grid_size_x, world.water.grid_size_z };
-    glUniform1i(glGetUniformLocation(water_program, "resolution"), water_resolution);
-	glUniform1i(glGetUniformLocation(water_program, "grid_x"), world.water.grid_size_x);
-	glUniform1i(glGetUniformLocation(water_program, "grid_z"), world.water.grid_size_z);
+	mat4 projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 250.0);
+	mat4 worldToViewMatrix = cameraPlacement();
 
 	glUseProgram(sky_program);
 	glUniformMatrix4fv(glGetUniformLocation(sky_program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
-	
-	//textures
+	//textures-------------------------------------------------------
 	glActiveTexture(GL_TEXTURE0);
 	LoadTGATexture( "textures/grass.tga", &ground_color_tex);
 	glActiveTexture(GL_TEXTURE1);
@@ -87,13 +59,9 @@ void init(void)
 	LoadTGATexture("textures/maskros512.tga", &water_color_tex);
 
 
-	world.water.init_water_tex();
+	world.terrain.init_program(projectionMatrix, worldToViewMatrix);
+	world.water.init_program(&projectionMatrix);
 	
-
-
-	//temporary test
-	//world.water.calculate_movements(20);
-
 
 	printError("init finished");
 }
@@ -109,45 +77,23 @@ void display(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	printError("pre display");
 
+
+	keyboard_interaction();
+
 	//set up matrices
 	cam_matrix = cameraPlacement();
 	model_world = IdentityMatrix(); //change this
 	model_to_view = cam_matrix * model_world;
 
-	cout << get_view_pos().x << " "  << get_view_pos().y << " " << get_view_pos().z << endl;
+	//cout << get_view_pos().x << " "  << get_view_pos().y << " " << get_view_pos().z << endl;
 
 	glUseProgram(sky_program);
 	draw_sky_box(&model_to_view);
 	glEnable(GL_DEPTH_TEST);
 
-	glUseProgram(ground_program);
-	glUniformMatrix4fv(glGetUniformLocation(ground_program, "camMatrix"), 1, GL_TRUE, cam_matrix.m);
-	glUniformMatrix4fv(glGetUniformLocation(ground_program, "mdlMatrix"), 1, GL_TRUE, model_to_view.m);
+	world.terrain.draw(cam_matrix, model_to_view);
+	world.water.draw(cam_matrix, time_diff, calc_water);
 
-	glUseProgram(water_program);
-	glUniformMatrix4fv(glGetUniformLocation(water_program, "camMatrix"), 1, GL_TRUE, cam_matrix.m);
-
-
-	//draw models
-	glUseProgram(ground_program);
-	glUniform1i(glGetUniformLocation(ground_program, "tex"), 0);
-	DrawModel(m, ground_program, "inPosition", "inNormal", "inTexCoord");
-	DrawModel(world.terrain.model, ground_program, "inPosition", "inNormal", "inTexCoord");
-	
-	
-	glUseProgram(water_program);
-	model_world = T(world.water.x_offset, 0, world.water.z_offset); //change this
-	model_to_view = cam_matrix * model_world;
-	glUniformMatrix4fv(glGetUniformLocation(water_program, "camMatrix"), 1, GL_TRUE, cam_matrix.m);
-	glUniformMatrix4fv(glGetUniformLocation(water_program, "mdlMatrix"), 1, GL_TRUE, model_world.m);
-
-	world.water.calculate_movements(20);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, world.water.grid_size_x, world.water.grid_size_z, 0,
-		GL_RGBA, GL_FLOAT, &world.water.height_array[0].x);
-	glUniform1i(glGetUniformLocation(water_program, "waterHeight"), 15);
-	DrawModel(world.water.model, ground_program, "inPosition", "inNormal", "inTexCoord");
-
-	//DrawModel(skybox_model, ground_program, "inPosition", "inNormal", "inTexCoord");
 	glutSwapBuffers();
 }
 
@@ -168,6 +114,17 @@ void draw_sky_box(const mat4 * mtv_matrix)
 }
 
 
+bool key_is_down = false;
+void keyboard_interaction() {
+	if (glutKeyIsDown('p') && !key_is_down)
+	{
+		calc_water = !calc_water;
+		key_is_down = true;
+	}
+
+	if(!glutKeyIsDown('p') && key_is_down)
+		key_is_down = false;
+}
 
 
 

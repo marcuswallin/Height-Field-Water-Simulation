@@ -30,7 +30,10 @@ public:
 
 	//returns the element at pos x, z
 	vec4* at(int x, int z);
-
+	
+	//interpolates the values at x+off_z, z+off_z 
+	//x+off_x or z+off_z shoudl not be larger than grid_size, and off_x and off_z >= 0.
+	float interpolate_height(int x, int z, float off_x, float off_z);
 private:
 
 };

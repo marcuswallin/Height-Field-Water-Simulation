@@ -26,3 +26,26 @@ vec4* HeightGrid::at(int x, int z) {
 			+ to_string(x) + " z=" + to_string(z));
 	return &height_array[x + z * grid_size_x];
 }
+
+
+//uses bilinear interpolation
+float HeightGrid::interpolate_height(int x, int z, float off_x, float off_z) {
+	
+	if (x + 1 >= grid_size_x || z + 1 >= grid_size_z) {
+		throw invalid_argument("Trying to interpolate at edge.");
+	}
+
+	float h = at(x, z)->x;
+	float h_x = at(x+1, z)->x;
+	float h_z = at(x, z + 1)->x;
+	float h_xz = at(x + 1, z + 1)->x;
+
+	//interpolation in x direction:
+	float x1 = (1 - off_x) * h + off_x * h_x;
+	float x2 = (1 - off_x) * h_z + off_x * h_xz;
+
+	float height = (1 - off_z) * x1 + off_z * x2;
+
+	return height;
+
+}

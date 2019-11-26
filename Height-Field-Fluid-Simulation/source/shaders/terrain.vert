@@ -16,6 +16,7 @@ void main(void)
 {
 	exSurface = (mdlMatrix * vec4(inPosition, 1.0)).xyz;
 	gl_Position = projMatrix * mdlMatrix * vec4(inPosition, 1.0);
+	//bad naming here
 	mat3 normalMatrix = mat3(mdlMatrix);
 	normalMatrix = inverse(normalMatrix);
 	normalMatrix = transpose(normalMatrix);

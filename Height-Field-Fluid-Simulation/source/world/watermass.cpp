@@ -14,40 +14,25 @@ WaterMass::WaterMass(Terrain& terrain,
 	model = GenerateTerrain(this, true, resolution);
 }
 
-//not sure if used
-WaterMass::WaterMass(const WaterMass& w) : HeightGrid(w) {};
+void WaterMass::draw(const mat4& cam_mat, int time_diff, bool calc_water){
+	glUseProgram(program);
+	mat4 model_world = T(x_offset, 0, z_offset); //change this
+	//model_to_view = cam_matrix * model_world;
+	glUniformMatrix4fv(glGetUniformLocation(program, "camMatrix"), 1, GL_TRUE, cam_mat.m);
+	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, model_world.m);
 
-//generates the height_vetor from the terrain
-//resolution is the number of nodes per ground grid
-void WaterMass::gen_water_from_terrain(Terrain& terrain,
-	int x_start, int x_end, int z_start, int z_end, float offset, int resolution) {
+	if (calc_water) calculate_movements(time_diff);
 
-	//height_vector.resize(z_end-z_start, vector<GLfloat>(x_end - x_start));
-//	height_array = new vec4[(z_end - z_start) * (x_end - x_start)];
-	for (int z = 0; z < grid_size_z; ++z)
-		for (int x = 0; x < grid_size_x; ++x) {
-			//stores water depth in x
-			//at(x, z)->x = offset;
-			//stores ground height in y
-			vec4* t_height = terrain.at(x / resolution + x_start, z / resolution + z_start);
-			//this should not be able to be out of bounds
-			//vec4* t_height_x = terrain.at(x / resolution + x_start + 1, z + z_start);
-			//vec4* t_height_z = terrain.at(x + x_start, z + z_start + 1);
-			at(x , z )->y = t_height->x;
-			at(x , z )->x = offset;
-			//interpolation
-			/*for (int res = 0; res < resolution; ++res) {
-				at(x*resolution + res, z*resolution)->y = t_height->x;
-				at(x * resolution + res, z * resolution)->x = offset;
-				at(x*resolution, z*resolution + res)->y = t_height->x;
-				at(x * resolution, z * resolution + res)->x = offset;
-			}	*/
-		}
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, grid_size_x, grid_size_z, 0,
+		GL_RGBA, GL_FLOAT, &height_array[0].x);
+	glUniform1i(glGetUniformLocation(program, "waterHeight"), 15);
+	DrawModel(model, program, "inPosition", "inNormal", "inTexCoord");
+
 }
 
-
-void WaterMass::init_water_tex() {
-
+void WaterMass::init_program(const mat4* proj_mat) {
+	program = loadShaders("source/shaders/water.vert", "source/shaders/water.frag");
+	glUseProgram(program);
 	//init texture data--------------------------------------------------
 	glActiveTexture(GL_TEXTURE15);
 	glGenTextures(1, &water_height_tex);
@@ -60,10 +45,44 @@ void WaterMass::init_water_tex() {
 		GL_RGBA, GL_FLOAT, &height_array[0].x);//&smoke_array[0].pos.x);
 	//water_program should be coitained by watermass
 	glUniform1i(glGetUniformLocation(program, "waterHeight"), 15);
-
-
+	glUniform1i(glGetUniformLocation(program, "resolution"), resolution);
+	glUniform1i(glGetUniformLocation(program, "grid_x"), grid_size_x);
+	glUniform1i(glGetUniformLocation(program, "grid_z"), grid_size_z);
+	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, proj_mat->m);
 
 }
+
+
+//generates the height_vetor from the terrain
+//resolution is the number of nodes per ground grid
+void WaterMass::gen_water_from_terrain(Terrain& terrain,
+	int x_start, int x_end, int z_start, int z_end, float offset, int resolution) {
+
+	for (int z = 0; z < grid_size_z; ++z)
+		for (int x = 0; x < grid_size_x; ++x) {
+			
+			vec4* t_height = terrain.at(x / resolution + x_start, z / resolution + z_start);
+
+			//stores water depth in x
+			at(x, z)->x = offset;
+			//stores ground height in y
+			//interpolation
+			float off_x = 0; 
+			if(x% resolution != 0)
+				off_x = (float)(x % resolution) / resolution;
+			
+			float off_z = 0;
+			if (z % resolution != 0)
+				off_z = (float)(z % resolution) / resolution;
+
+			float height = terrain.interpolate_height(x / resolution + x_start, z / resolution + z_start, 
+				off_x, off_z);
+			at(x, z)->y = height; //t_height->x;
+	
+		}
+}
+
+
 
 //timestep in milliseconds
 void WaterMass::calculate_movements(int timestep_length) {
@@ -94,9 +113,9 @@ float WaterMass::get_height_derivative(int x, int z) {
 	
 	float dhdt = -(
 		(hbarx_plus * get_velocity(x,z,1,0)->x - 
-		hbarx_minus * get_velocity(x, z, -1, 0)->x) / resolution + 
+		hbarx_minus * get_velocity(x, z, -1, 0)->x) * 1.0 / resolution + 
 		(hbarz_plus * get_velocity(x, z, 0, 1)->z -
-		hbarz_minus * get_velocity(x, z, 0, -1)->z) / resolution);
+		hbarz_minus * get_velocity(x, z, 0, -1)->z)* 1.0 / resolution);
 	return dhdt;
 }
 
@@ -170,7 +189,7 @@ void WaterMass::velocity_integration(void) {
 			}
 			else {
 				vec4* h_xplus = at(x + 1, z);
-				v_xplus->x += -(1-friction_c) * (gravity / scale) * deltat *
+				v_xplus->x += -(1-friction_c) * (gravity * resolution ) * deltat *
 					((h_xplus->x + h_xplus->y) - (h->x + h->y));
 				if (v_xplus->x > a_vel * 1 / deltat) {
 					v_xplus->x = a_vel * 1 / deltat;
@@ -184,7 +203,7 @@ void WaterMass::velocity_integration(void) {
 			}
 			else {
 				vec4* h_zplus = at(x, z + 1);
-				v_zplus->z += -(gravity / scale) * deltat *
+				v_zplus->z += -(gravity * resolution) * deltat *
 					((h_zplus->x + h_zplus->y) - (h->x + h->y));
 				if (v_zplus->z > a_vel * 1 / deltat) {
 					v_zplus->z = a_vel * 1 / deltat;

@@ -20,6 +20,8 @@ public:
 	World(char*, 
 		int x_start, int x_end, int z_start, int z_end, float, int water_resolution);
 	World() = default;
+	World(const World &) = default;
+	World& operator=(const World&) = default;
 
 	Terrain terrain;
 	WaterMass water;

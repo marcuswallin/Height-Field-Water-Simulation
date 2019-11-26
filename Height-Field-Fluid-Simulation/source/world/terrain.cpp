@@ -14,6 +14,24 @@ Terrain::Terrain(char * ground_gen_file) {
 }
 
 
+void Terrain::init_program(const mat4& proj_mat, const mat4& wtv_mat) {
+	program = loadShaders("source/shaders/terrain.vert", "source/shaders/terrain.frag");
+	glUseProgram(program);
+	glUniformMatrix4fv(glGetUniformLocation(program, "camMatrix"), 1, GL_TRUE, wtv_mat.m);
+	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, proj_mat.m);
+
+}
+
+void Terrain::draw(const mat4& cam_mat, const mat4& mtv_mat) {
+	glUseProgram(program);
+	glUniformMatrix4fv(glGetUniformLocation(program, "camMatrix"), 1, GL_TRUE, cam_mat.m);
+	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, mtv_mat.m);
+
+	glUniform1i(glGetUniformLocation(program, "tex"), 0);
+	//DrawModel(m, program, "inPosition", "inNormal", "inTexCoord");
+	DrawModel(model, program, "inPosition", "inNormal", "inTexCoord");
+
+}
 void Terrain::tex_to_vector() {
 
 	height_array = new vec4[grid_size_x * grid_size_z];

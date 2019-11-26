@@ -14,24 +14,30 @@ public:
 	WaterMass() = default;
 	WaterMass(Terrain& terrain,
 		int x_start, int x_end, int z_start, int z_end, float offset, int resolution);
-	WaterMass(const WaterMass& w); 
+	WaterMass(const WaterMass& w) = default;
+	WaterMass & operator=(const WaterMass& w) = default;
 
 	int x_offset;
 	int z_offset;
-	double friction_c = 0.001;
-	double gravity = 9.82;
-	 
 
-	void init_water_tex();
+	 
+	void draw(const mat4& cam_mat, int time_diff, bool calc_water);
+	void init_program(const mat4* proj_mat);
 	void calculate_movements(int time_diff);
-	GLuint program;
 
 private:
 	void gen_water_from_terrain( Terrain&,
 		int x_start, int x_end, int z_start, int z_end, float offset, int resolution);
 
+	//the texture that the height was read from
 	GLuint water_height_tex;
 
+	//the shaders used by watermass
+	GLuint program;
+
+	//coeffiecients for calculation
+	double friction_c = 0.000;
+	double gravity = 9.82;
 	float ground_e = 0.0001;
 	float a_vel = 0.5;
 	int resolution;

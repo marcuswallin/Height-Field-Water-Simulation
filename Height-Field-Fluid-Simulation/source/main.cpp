@@ -12,6 +12,7 @@
 #include "MicroGlut.h"
 // uses framework Cocoa
 //#include "GL_utilities.h"
+
 #include "display/display.h"
 #include <Windows.h>
 
@@ -19,7 +20,6 @@
 using namespace std;
 
 
-int time_diff;
 void timer(int i)
 {
 	glutTimerFunc(time_diff, &timer, i);
