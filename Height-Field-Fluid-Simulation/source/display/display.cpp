@@ -36,7 +36,7 @@ void init(void)
 	//glEnable(GL_CULL_FACE);
 	//glCullFace(GL_TRUE);
 
-	vec3 start_pos = SetVector(125, 10,150);
+	vec3 start_pos = SetVector(130, 10,150);
 	int x_size =30;
 	int z_size = 30;
 	initControls(start_pos, 0, M_PI / 2);
