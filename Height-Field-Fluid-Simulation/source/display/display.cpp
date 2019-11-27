@@ -12,6 +12,7 @@ GLuint sky_program;
 TextureData ground_color_tex, skybox_tex, water_color_tex;
 
 bool calc_water = false;
+bool print_time = false;
 
 //World world{};
 World world;
@@ -27,10 +28,10 @@ void init(void)
 	//glCullFace(GL_TRUE);
 
 	//vec3 start_pos = SetVector(120, 10,140);
-	vec3 start_pos = SetVector(50, 10,120);
+	vec3 start_pos = SetVector(50, 10,110);
 
-	int x_size =50;
-	int z_size = 50;
+	int x_size = 30;
+	int z_size = 30;
 	int water_resolution = 3;
 	initControls(start_pos, 0, M_PI / 2);
 	
@@ -42,7 +43,7 @@ void init(void)
 	
 	world = World("textures/fft-terrain.tga", 
 		start_pos.x - x_size/2, start_pos.x + x_size/2, start_pos.z - 30 - z_size/2, 
-		start_pos.z - 30 + z_size/2,0.5, water_resolution);
+		start_pos.z - 30 + z_size/2, 1 , water_resolution, time_diff);
 	
 	mat4 projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 250.0);
 	mat4 worldToViewMatrix = cameraPlacement();
@@ -67,7 +68,7 @@ void init(void)
 }
 
 
-
+int old_t;
 
 void display(void)
 {
@@ -92,7 +93,18 @@ void display(void)
 	glEnable(GL_DEPTH_TEST);
 
 	world.terrain.draw(cam_matrix, model_to_view);
+	
+	
+	int start_t = glutGet(GLUT_ELAPSED_TIME);
+	// = start_t;
 	world.water.draw(cam_matrix, time_diff, calc_water);
+	int end_t = glutGet(GLUT_ELAPSED_TIME);
+	
+	if (print_time) {
+		old_t++;
+		cout << "Calculation time: " + to_string(old_t) << endl;
+	}
+		
 
 	glutSwapBuffers();
 }
@@ -115,14 +127,20 @@ void draw_sky_box(const mat4 * mtv_matrix)
 
 
 bool key_is_down = false;
+
 void keyboard_interaction() {
 	if (glutKeyIsDown('p') && !key_is_down)
 	{
 		calc_water = !calc_water;
 		key_is_down = true;
 	}
+	if (glutKeyIsDown('t') && !key_is_down)
+	{
+		print_time = !print_time;
+		key_is_down = true;
+	}
 
-	if(!glutKeyIsDown('p') && key_is_down)
+	if(!glutKeyIsDown('p') && !glutKeyIsDown('t') && key_is_down)
 		key_is_down = false;
 }
 

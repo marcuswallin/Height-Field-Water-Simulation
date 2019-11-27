@@ -18,11 +18,11 @@
 
 
 using namespace std;
-
+int t = 20;
 
 void timer(int i)
 {
-	glutTimerFunc(time_diff, &timer, i);
+	glutTimerFunc(1000.0/50.0, &timer, i);
 	glutPostRedisplay();
 }
 
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 #endif
 	glutDisplayFunc(display); 
 
-	glutTimerFunc(0, &timer, 0);
+	glutTimerFunc(t, &timer, 0);
 	init ();
 	glutMainLoop();
 	exit(0);
