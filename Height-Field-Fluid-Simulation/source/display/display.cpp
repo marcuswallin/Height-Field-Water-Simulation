@@ -31,7 +31,7 @@ void init(void)
 
 	int x_size =50;
 	int z_size = 50;
-	int water_resolution = 3;
+	int water_resolution = 1;
 	initControls(start_pos, 0, M_PI / 2);
 	
 	sky_program = loadShaders("source/shaders/skybox.vert", "source/shaders/skybox.frag");
@@ -93,6 +93,7 @@ void display(void)
 
 	world.terrain.draw(cam_matrix, model_to_view);
 	world.water.draw(cam_matrix, time_diff, calc_water);
+
 
 	glutSwapBuffers();
 }

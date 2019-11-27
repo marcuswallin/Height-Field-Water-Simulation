@@ -22,7 +22,7 @@ using namespace std;
 
 void timer(int i)
 {
-	glutTimerFunc(time_diff, &timer, i);
+	glutTimerFunc(1000, &timer, i);
 	glutPostRedisplay();
 }
 
@@ -30,8 +30,9 @@ void timer(int i)
 int main(int argc, char *argv[])
 {
 	time_diff = 20;
-	AllocConsole();
-	freopen("CONOUT$", "a", stdout);
+	//AllocConsole();
+	//freopen("CONOUT$", "a", stdout);
+	
 	glutInit(&argc, argv);
 	glutInitContextVersion(3, 2);
 	glutInitWindowSize(1200, 900);
@@ -41,7 +42,8 @@ int main(int argc, char *argv[])
 #endif
 	glutDisplayFunc(display); 
 
-	glutTimerFunc(0, &timer, 0);
+	glutTimerFunc(1000, &timer, 0);
+	//glutRepeatingTimer(20);
 	init ();
 	glutMainLoop();
 	exit(0);
