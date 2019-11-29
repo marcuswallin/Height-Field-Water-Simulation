@@ -1,11 +1,12 @@
 #version 150
 
 in  vec3 inPosition;
-in  vec3 inNormal;
+//in  vec3 inNormal;
 in vec2 inTexCoord;
+
 out vec2 texCoord;
-out vec3 exNormal;
-out vec3 exSurface;
+//out vec3 exNormal;
+//out vec3 exSurface;
 uniform sampler2D waterHeight;
 
 uniform int grid_x;
@@ -34,14 +35,14 @@ void main(void)
 
     mdlMat[3][1] = heights.y + water_depth;
 	
-	exSurface = (mdlMat * vec4(inPosition, 1.0)).xyz;
+	//exSurface = (mdlMat * vec4(inPosition, 1.0)).xyz;
 	gl_Position = projMatrix * camMatrix *mdlMat * vec4(inPosition, 1.0);
 
 
-	mat3 normalMatrix = mat3(mdlMat);
-	normalMatrix = inverse(normalMatrix);
-	normalMatrix = transpose(normalMatrix);
-	exNormal = normalMatrix * inNormal;
+//	mat3 normalMatrix = mat3(mdlMat);
+	//normalMatrix = inverse(normalMatrix);
+	//normalMatrix = transpose(normalMatrix);
+	//exNormal = normalMatrix * exNormal;
 	texCoord = inTexCoord;
 
 }

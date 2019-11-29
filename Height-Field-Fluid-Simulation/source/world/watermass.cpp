@@ -30,12 +30,13 @@ void WaterMass::draw(const mat4& cam_mat, int time_diff, bool calc_water){
 	//glActiveTexture(GL_TEXTURE2);
 	glUniform1i(glGetUniformLocation(program, "tex"), 2);
 
-	DrawModel(model, program, "inPosition", "inNormal", "inTexCoord");
+	DrawModel(model, program, "inPosition", NULL, "inTexCoord");
 
 }
 
 void WaterMass::init_program(const mat4* proj_mat) {
-	program = loadShaders("source/shaders/water.vert", "source/shaders/water.frag");
+	program = loadShadersG("source/shaders/water.vert", 
+		"source/shaders/water.frag", "source/shaders/water.geom");
 	glUseProgram(program);
 	//init texture data--------------------------------------------------
 	glActiveTexture(GL_TEXTURE15);
