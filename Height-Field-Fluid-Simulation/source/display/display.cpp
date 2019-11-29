@@ -57,7 +57,7 @@ void init(void)
 	glActiveTexture(GL_TEXTURE1);
 	LoadTGATexture("textures/SkyBox512.tga", &skybox_tex);
 	glActiveTexture(GL_TEXTURE2);
-	LoadTGATexture("textures/water_water_0024_03_tiled_s.tga", &water_color_tex);
+	LoadTGATexture("textures/grid_dots_clipped.tga", &water_color_tex);
 
 
 	world.terrain.init_program(projectionMatrix, worldToViewMatrix);
