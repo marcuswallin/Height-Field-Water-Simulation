@@ -1,13 +1,14 @@
 #pragma once
 #include "watermass.h"
 #include <iostream>
+
 using namespace std;
 
 //velocities initiated as staggered grid
 WaterMass::WaterMass(Terrain& terrain,
-	int x_start, int x_end, int z_start, int z_end, float offset, int resolution_) :
-	HeightGrid{ (x_end - x_start)*resolution_,  (z_end - z_start)*resolution_, true }, 
-	x_offset(x_start), z_offset(z_start), resolution{resolution_}, 
+	int x_start, int x_end, int z_start, int z_end, float offset, int resolution_,  int timestep_length) :
+	HeightGrid{ (x_end - x_start)*resolution_,  (z_end - z_start)*resolution_, true  },
+	x_offset(x_start), z_offset(z_start), resolution{resolution_}, deltat{ (float)timestep_length / 1000},
 	velocities{ (x_end - x_start)*resolution_ + 1,  (z_end - z_start) * 2 * resolution_ + 1, true }{
 
 	gen_water_from_terrain(terrain, x_start, x_end, z_start, z_end, offset, resolution);
@@ -21,11 +22,14 @@ void WaterMass::draw(const mat4& cam_mat, int time_diff, bool calc_water){
 	glUniformMatrix4fv(glGetUniformLocation(program, "camMatrix"), 1, GL_TRUE, cam_mat.m);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, model_world.m);
 
-	if (calc_water) calculate_movements(time_diff);
+	if (calc_water) calculate_movements();
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, grid_size_x, grid_size_z, 0,
 		GL_RGBA, GL_FLOAT, &height_array[0].x);
 	glUniform1i(glGetUniformLocation(program, "waterHeight"), 15);
+	//glActiveTexture(GL_TEXTURE2);
+	glUniform1i(glGetUniformLocation(program, "tex"), 2);
+
 	DrawModel(model, program, "inPosition", "inNormal", "inTexCoord");
 
 }
@@ -49,6 +53,8 @@ void WaterMass::init_program(const mat4* proj_mat) {
 	glUniform1i(glGetUniformLocation(program, "grid_x"), grid_size_x);
 	glUniform1i(glGetUniformLocation(program, "grid_z"), grid_size_z);
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, proj_mat->m);
+
+	glUniform1i(glGetUniformLocation(program, "tex"), 2);
 
 }
 
@@ -85,17 +91,43 @@ void WaterMass::gen_water_from_terrain(Terrain& terrain,
 
 
 //timestep in milliseconds
-void WaterMass::calculate_movements(int timestep_length) {
+void WaterMass::calculate_movements() {
 	HeightGrid height_copy{ *this };
 	//float time = (float)glutGet(GLUT_ELAPSED_TIME) / 100.0;
 	for (int z = 0; z < grid_size_z; ++z) {
 		for (int x = 0; x < grid_size_x; x++)
 		{
+
+			vec4* h = height_copy.at(x, z);
+
 			float dhdt = get_height_derivative(x, z);
-			height_copy.at(x, z)->x += dhdt * timestep_length / 1000;
-			if (height_copy.at(x, z)->x < 0){
-				height_copy.at(x, z)->x = 0;
+			h->x += dhdt * deltat;
+			if (h->x < 0){
+				h->x = 0;
 			}
+			/*if (x != 0 && x != grid_size_x - 1 && z != 0 && z != grid_size_z - 1) {
+				vec4* h_xp = height_copy.at(x + 1, z);
+				vec4* h_xm = height_copy.at(x - 1, z);
+				vec4* h_zp = height_copy.at(x, z + 1);
+				vec4* h_zm = height_copy.at(x, z - 1);
+
+				//this should be separate function
+				if ((h->x + h->y) - (h_xm->x + h_xm->y) > lambda_edge &&
+					(h->x + h->y) > (h_xp->x + h_xp->y))
+					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_xp->x) - h->x));
+
+				if ((h->x + h->y) - (h_xp->x + h_xp->y) > lambda_edge &&
+					(h->x + h->y) > (h_xm->x + h_xm->y))
+					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_xm->x) - h->x));
+
+				if ((h->x + h->y) - (h_zm->x + h_zm->y) > lambda_edge &&
+					(h->x + h->y) > (h_zp->x + h_zp->y))
+					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_zp->x) - h->x));
+
+				if ((h->x + h->y) - (h_zp->x + h_zp->y) > lambda_edge &&
+					(h->x + h->y) > (h_zm->x + h_zm->y))
+					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_zm->x) - h->x));
+			}*/
 		}
 	}
 	height_array = height_copy.height_array;
@@ -111,21 +143,44 @@ float WaterMass::get_height_derivative(int x, int z) {
 	hbarz_plus = get_hbar_z(x, z, 0, 1);
 	hbarz_minus = get_hbar_z(x, z, 0, -1);
 	
+	float h_avg_max = beta * 1 / (resolution * gravity * deltat);
+
+	float h_adj = max((float)0,
+		(hbarx_plus + hbarx_minus + hbarz_plus + hbarz_minus) / 4 - h_avg_max);
+
+	//does low difference to height increase
+	hbarx_plus -= h_adj;
+	hbarx_minus -= h_adj;
+	hbarz_plus -= h_adj;
+	hbarz_minus -= h_adj;
+
 	float dhdt = -(
-		(hbarx_plus * get_velocity(x,z,1,0)->x - 
-		hbarx_minus * get_velocity(x, z, -1, 0)->x) * 1.0 / resolution + 
+		(hbarx_plus * get_velocity(x, z, 1, 0)->x - 
+		hbarx_minus * get_velocity(x, z, -1, 0)->x) + 
 		(hbarz_plus * get_velocity(x, z, 0, 1)->z -
-		hbarz_minus * get_velocity(x, z, 0, -1)->z)* 1.0 / resolution);
-	return dhdt;
+		hbarz_minus * get_velocity(x, z, 0, -1)->z)) * resolution;
+	
+	float friction_f = friction_force(dhdt);
+
+
+	return dhdt - friction_f * deltat;
 }
 
+float WaterMass::friction_force(float vel) {
+	
+	int mult = 1;
+	if (vel < 0)
+		mult = -1;
+
+	return  mult*friction_c * vel * vel / 2;
+}
 
 //test eq.5 
 float WaterMass::get_hbar_x(int x, int z, int x_offset, int z_offset)
 {   
 	
 	float hbar = at(x, z)->x;
-	if (get_velocity(x, z, x_offset, z_offset)->x <= 0 &&
+	if (x_offset*get_velocity(x, z, x_offset, z_offset)->x <= 0 &&
 		x+x_offset < grid_size_x && x+x_offset >=0) {
 		hbar = at(x + x_offset, z)->x;
 	}
@@ -136,7 +191,7 @@ float WaterMass::get_hbar_x(int x, int z, int x_offset, int z_offset)
 float WaterMass::get_hbar_z(int x, int z, int x_offset, int z_offset)
 {
 	float hbar = at(x, z)->x;
-	if (get_velocity(x, z, x_offset, z_offset)->z <= 0 && 
+	if (z_offset*get_velocity(x, z, x_offset, z_offset)->z <= 0 && 
 		z + z_offset < grid_size_z && z + z_offset >= 0) {
 		hbar = at(x, z+z_offset)->x;
 	}
@@ -162,6 +217,7 @@ vec4* WaterMass::get_velocity(int x, int z, int x_offset, int z_offset)
 	int x_vel = x + tmp_x;
 
 	int z_vel;
+	
 	if (z_offset == -1) {
 		z_offset = 0;
 	}
@@ -182,23 +238,22 @@ void WaterMass::velocity_integration(void) {
 			vec4* v_zplus = get_velocity(x, z, 0, 1);
 			vec4* h = at(x, z);
 
-			float deltat = (20.0 / 1000.0);
 			//reflective
-			if (x >= grid_size_x-1 || is_reflective_x(x,z)) {
+			if (x+1 >= grid_size_x || is_reflective_x(x,z)) {
 				v_xplus->x = 0;
 			}
 			else {
 				vec4* h_xplus = at(x + 1, z);
-				v_xplus->x += -(1-friction_c) * (gravity * resolution ) * deltat *
+				v_xplus->x += -(gravity * resolution ) * deltat *
 					((h_xplus->x + h_xplus->y) - (h->x + h->y));
 				if (v_xplus->x > a_vel * 1 / deltat) {
 					v_xplus->x = a_vel * 1 / deltat;
 				}
-				*v_xplus *= (1 - friction_c);
+				v_xplus->x -= friction_force(v_xplus->x)*deltat;
 			}
 
 			//reflective
-			if (z >= grid_size_z - 1 || is_reflective_z(x, z)) {
+			if (z + 1 >= grid_size_z || is_reflective_z(x, z)) {
 				v_zplus->z = 0;
 			}
 			else {
@@ -208,7 +263,7 @@ void WaterMass::velocity_integration(void) {
 				if (v_zplus->z > a_vel * 1 / deltat) {
 					v_zplus->z = a_vel * 1 / deltat;
 				}
-				*v_zplus *= (1 - friction_c);
+				v_zplus->z -= friction_force(v_zplus->z) * deltat;
 			}
 		}
 	}
