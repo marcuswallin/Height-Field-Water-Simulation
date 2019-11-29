@@ -27,6 +27,9 @@ void WaterMass::draw(const mat4& cam_mat, int time_diff, bool calc_water){
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, grid_size_x, grid_size_z, 0,
 		GL_RGBA, GL_FLOAT, &height_array[0].x);
 	glUniform1i(glGetUniformLocation(program, "waterHeight"), 15);
+	//glActiveTexture(GL_TEXTURE2);
+	glUniform1i(glGetUniformLocation(program, "tex"), 2);
+
 	DrawModel(model, program, "inPosition", "inNormal", "inTexCoord");
 
 }
@@ -50,6 +53,8 @@ void WaterMass::init_program(const mat4* proj_mat) {
 	glUniform1i(glGetUniformLocation(program, "grid_x"), grid_size_x);
 	glUniform1i(glGetUniformLocation(program, "grid_z"), grid_size_z);
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, proj_mat->m);
+
+	glUniform1i(glGetUniformLocation(program, "tex"), 2);
 
 }
 
@@ -100,7 +105,7 @@ void WaterMass::calculate_movements() {
 			if (h->x < 0){
 				h->x = 0;
 			}
-			if (x != 0 && x != grid_size_x - 1 && z != 0 && z != grid_size_z - 1) {
+			/*if (x != 0 && x != grid_size_x - 1 && z != 0 && z != grid_size_z - 1) {
 				vec4* h_xp = height_copy.at(x + 1, z);
 				vec4* h_xm = height_copy.at(x - 1, z);
 				vec4* h_zp = height_copy.at(x, z + 1);
@@ -122,7 +127,7 @@ void WaterMass::calculate_movements() {
 				if ((h->x + h->y) - (h_zp->x + h_zp->y) > lambda_edge &&
 					(h->x + h->y) > (h_zm->x + h_zm->y))
 					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_zm->x) - h->x));
-			}
+			}*/
 		}
 	}
 	height_array = height_copy.height_array;
@@ -143,6 +148,7 @@ float WaterMass::get_height_derivative(int x, int z) {
 	float h_adj = max((float)0,
 		(hbarx_plus + hbarx_minus + hbarz_plus + hbarz_minus) / 4 - h_avg_max);
 
+	//does low difference to height increase
 	hbarx_plus -= h_adj;
 	hbarx_minus -= h_adj;
 	hbarz_plus -= h_adj;
@@ -153,16 +159,28 @@ float WaterMass::get_height_derivative(int x, int z) {
 		hbarx_minus * get_velocity(x, z, -1, 0)->x) + 
 		(hbarz_plus * get_velocity(x, z, 0, 1)->z -
 		hbarz_minus * get_velocity(x, z, 0, -1)->z)) * resolution;
-	return dhdt;
+	
+	float friction_f = friction_force(dhdt);
+
+
+	return dhdt - friction_f * deltat;
 }
 
+float WaterMass::friction_force(float vel) {
+	
+	int mult = 1;
+	if (vel < 0)
+		mult = -1;
+
+	return  mult*friction_c * vel * vel / 2;
+}
 
 //test eq.5 
 float WaterMass::get_hbar_x(int x, int z, int x_offset, int z_offset)
 {   
 	
 	float hbar = at(x, z)->x;
-	if (get_velocity(x, z, x_offset, z_offset)->x <= 0 &&
+	if (x_offset*get_velocity(x, z, x_offset, z_offset)->x <= 0 &&
 		x+x_offset < grid_size_x && x+x_offset >=0) {
 		hbar = at(x + x_offset, z)->x;
 	}
@@ -173,7 +191,7 @@ float WaterMass::get_hbar_x(int x, int z, int x_offset, int z_offset)
 float WaterMass::get_hbar_z(int x, int z, int x_offset, int z_offset)
 {
 	float hbar = at(x, z)->x;
-	if (get_velocity(x, z, x_offset, z_offset)->z <= 0 && 
+	if (z_offset*get_velocity(x, z, x_offset, z_offset)->z <= 0 && 
 		z + z_offset < grid_size_z && z + z_offset >= 0) {
 		hbar = at(x, z+z_offset)->x;
 	}
@@ -221,21 +239,21 @@ void WaterMass::velocity_integration(void) {
 			vec4* h = at(x, z);
 
 			//reflective
-			if (x >= grid_size_x-1 || is_reflective_x(x,z)) {
+			if (x+1 >= grid_size_x || is_reflective_x(x,z)) {
 				v_xplus->x = 0;
 			}
 			else {
 				vec4* h_xplus = at(x + 1, z);
-				v_xplus->x += -(1-friction_c) * (gravity * resolution ) * deltat *
+				v_xplus->x += -(gravity * resolution ) * deltat *
 					((h_xplus->x + h_xplus->y) - (h->x + h->y));
 				if (v_xplus->x > a_vel * 1 / deltat) {
 					v_xplus->x = a_vel * 1 / deltat;
 				}
-				*v_xplus *= (1 - friction_c);
+				v_xplus->x -= friction_force(v_xplus->x)*deltat;
 			}
 
 			//reflective
-			if (z >= grid_size_z - 1 || is_reflective_z(x, z)) {
+			if (z + 1 >= grid_size_z || is_reflective_z(x, z)) {
 				v_zplus->z = 0;
 			}
 			else {
@@ -245,7 +263,7 @@ void WaterMass::velocity_integration(void) {
 				if (v_zplus->z > a_vel * 1 / deltat) {
 					v_zplus->z = a_vel * 1 / deltat;
 				}
-				*v_zplus *= (1 - friction_c);
+				v_zplus->z -= friction_force(v_zplus->z) * deltat;
 			}
 		}
 	}

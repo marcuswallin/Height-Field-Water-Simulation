@@ -28,11 +28,11 @@ void init(void)
 	//glCullFace(GL_TRUE);
 
 	//vec3 start_pos = SetVector(120, 10,140);
-	vec3 start_pos = SetVector(50, 10,110);
+	vec3 start_pos = SetVector(60, 10,90);
 
-	int x_size = 30;
-	int z_size = 30;
-	int water_resolution = 3;
+	int x_size = 60;
+	int z_size = 60;
+	int water_resolution = 2;
 	initControls(start_pos, 0, M_PI / 2);
 	
 	sky_program = loadShaders("source/shaders/skybox.vert", "source/shaders/skybox.frag");
@@ -57,7 +57,7 @@ void init(void)
 	glActiveTexture(GL_TEXTURE1);
 	LoadTGATexture("textures/SkyBox512.tga", &skybox_tex);
 	glActiveTexture(GL_TEXTURE2);
-	LoadTGATexture("textures/maskros512.tga", &water_color_tex);
+	LoadTGATexture("textures/water_water_0024_03_tiled_s.tga", &water_color_tex);
 
 
 	world.terrain.init_program(projectionMatrix, worldToViewMatrix);
@@ -96,16 +96,18 @@ void display(void)
 	
 	
 	int start_t = glutGet(GLUT_ELAPSED_TIME);
+
+
 	// = start_t;
 	world.water.draw(cam_matrix, time_diff, calc_water);
 	int end_t = glutGet(GLUT_ELAPSED_TIME);
 	
 	if (print_time) {
-		old_t++;
-		cout << "Calculation time: " + to_string(old_t) << endl;
+	//	old_t++;
+		cout << "Update freq: " + to_string(start_t-old_t) << endl;
 	}
 		
-
+	old_t = start_t;
 	glutSwapBuffers();
 }
 

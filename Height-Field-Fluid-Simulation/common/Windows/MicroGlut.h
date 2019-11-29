@@ -11,6 +11,9 @@ void glutCheckLoop();
 void glutInit(int *argcp, char **argv);
 void glutPostRedisplay();
 
+void StartCounter();
+
+
 void glutReshapeFunc(void (*func)(int width, int height));
 void glutDisplayFunc(void (*func)(void));
 void glutKeyboardFunc(void (*func)(unsigned char key, int x, int y));

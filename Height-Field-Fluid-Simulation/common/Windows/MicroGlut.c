@@ -25,7 +25,8 @@
 // 170221: Added glutPositionWindow, glutReshapeWindow. Changed default behavior on resize.
 // 170913: Added glutMouseIsDown, corrected support for glutMotionFunc (dragging).
 
-
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 #include <windows.h>
 #include "glew.h"
 #include <gl/gl.h>
@@ -159,6 +160,11 @@ void glutPostRedisplay()
 //MGApplication *myApp;
 //NSView *view;
 //NSWindow *window;
+typedef struct timeval {
+	long tv_sec;
+	long tv_usec;
+} timeval;
+
 static struct timeval timeStart;
 
 void glutInit(int *argcp, char **argv)
@@ -246,6 +252,7 @@ void glutMainLoop()
 			} 
 			else 
 			{
+				//GetMessage( &msg);
 				TranslateMessage( &msg );
 				DispatchMessage( &msg );
 			}
@@ -261,7 +268,14 @@ void glutMainLoop()
 				gIdle();
 			// TIMERS!
 			checktimers();
+
 		}
+
+
+		
+	
+		
+		//checktimers();
 	}
 }
 
@@ -332,14 +346,62 @@ void glutSwapBuffers()
  	SwapBuffers(hDC);
 }
 
+
+int gettimeofday(struct timeval* tp, struct timezone* tzp)
+{
+	// Note: some broken versions only have 8 trailing zero's, the correct epoch has 9 trailing zero's
+	// This magic number is the number of 100 nanosecond intervals since January 1, 1601 (UTC)
+	// until 00:00:00 January 1, 1970 
+	static const unsigned int EPOCH = ((unsigned int )116444736000000000ULL);
+
+	SYSTEMTIME  system_time;
+	FILETIME    file_time;
+	unsigned int time;
+
+	GetSystemTime(&system_time);
+	SystemTimeToFileTime(&system_time, &file_time);
+	time = ((unsigned int)file_time.dwLowDateTime);
+	time += ((unsigned int)file_time.dwHighDateTime) << 32;
+
+	tp->tv_sec = (long)((time - EPOCH) / 10000000L);
+	tp->tv_usec = (long)(system_time.wMilliseconds * 1000);
+	return 0;
+}
+
+double PCFreq = 0.0;
+__int64 CounterStart = 0;
+
+void StartCounter()
+{
+	LARGE_INTEGER li;
+	QueryPerformanceFrequency(&li);
+	//if (!QueryPerformanceFrequency(&li))
+		//cout << "QueryPerformanceFrequency failed!\n";
+
+	PCFreq = (double)(li.QuadPart) / 1000.0;
+
+	QueryPerformanceCounter(&li);
+	CounterStart = li.QuadPart;
+}
+
+double GetCounter()
+{
+	LARGE_INTEGER li;
+	QueryPerformanceCounter(&li);
+	return (double)(li.QuadPart - CounterStart) / PCFreq;
+}
+
+
+
 int glutGet(int type)
 {
-//	struct timeval tv;
+	//struct timeval tv;
 	
-//	gettimeofday(&tv, NULL);
-//	return (tv.tv_usec - timeStart.tv_usec) / 1000 + (tv.tv_sec - timeStart.tv_sec)*1000;
-
-	return GetTickCount();
+	//gettimeofday(&tv, NULL);
+	//return (tv.tv_usec - timeStart.tv_usec) / 1000 + (tv.tv_sec - timeStart.tv_sec)*1000;
+	//changed from etTickCount();
+	int ms = (int)GetCounter();
+	return ms;//GetTickCount64();
 }
 
 void glutInitDisplayMode(unsigned int mode)
@@ -502,6 +564,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT: // Don't have Windows fighting us while resize!
 		if (gDisplay)
 			gDisplay();
+		DefWindowProc(hWnd, message, wParam, lParam);
 		break;
 	case WM_ERASEBKGND:
 		return 1;
@@ -628,7 +691,10 @@ static void checktimers()
 		t = gTimers;
 		for (t = gTimers; t != NULL; t = t->next)
 		{
-			if (t->time < nextTime) nextTime = t->time; // Time for the next one
+			if (t->time < nextTime) {
+				nextTime = t->time; // Time for the next one
+			//	printf("%d \n", t->time - now );
+			}
 			if (t->time < now) // See if this is due to fire
 			{
 				firethis = t;
@@ -636,6 +702,7 @@ static void checktimers()
 		}
 		if (firethis != NULL)
 		{
+		//	printf("firing! \n");
 		// Fire the timer
 			if (firethis->func != NULL)
 				firethis->func(firethis->arg);
@@ -657,10 +724,13 @@ static void checktimers()
 				free(firethis);
 			}
 		}
+		
 		// Otherwise, sleep until any timer should fire
         if (!updatePending)
+		//	printf("no update! \n");
 			if (nextTime > now)
             {
+				
 		usleep((nextTime - now)*1000);
             }
 	}

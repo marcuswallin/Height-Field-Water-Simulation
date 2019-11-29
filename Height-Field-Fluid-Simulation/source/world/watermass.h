@@ -33,12 +33,13 @@ private:
 
 	//the texture that the height was read from
 	GLuint water_height_tex;
+	TextureData water_color_tex;
 
 	//the shaders used by watermass
 	GLuint program;
 
 	//coeffiecients for calculation
-	double friction_c = 0.01;
+	double friction_c = 0.1;
 	double gravity = 9.82;
 	float ground_e = 0.0001;
 	float a_vel = 0.5;
@@ -60,6 +61,7 @@ private:
 	bool WaterMass::is_reflective_x(int x, int z);
 	bool WaterMass::is_reflective_z(int x, int z);
 	void WaterMass::velocity_integration(void);
+	float friction_force(float vel);
 
 };
 

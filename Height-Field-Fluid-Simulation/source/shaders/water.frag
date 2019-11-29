@@ -2,6 +2,7 @@
 
 out vec4 outColor;
 uniform sampler2D waterHeight;
+uniform sampler2D tex;
 uniform mat4 camMatrix;
 
 in vec3 exSurface;
@@ -26,6 +27,6 @@ void main(void)
 
     //outColor =  shade*vec4(0.1,0.1,1, 1.0);
 	
-    outColor =  texture(waterHeight, texCoord)/10;
+    outColor = texture(waterHeight, texCoord)/10;
     
 }
