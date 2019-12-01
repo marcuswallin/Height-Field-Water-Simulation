@@ -43,7 +43,7 @@ void init(void)
 	
 	world = World("textures/fft-terrain.tga", 
 		start_pos.x - x_size/2, start_pos.x + x_size/2, start_pos.z - 30 - z_size/2, 
-		start_pos.z - 30 + z_size/2, 1 , water_resolution, time_diff);
+		start_pos.z - 30 + z_size/2, 0.5 , water_resolution, time_diff);
 	
 	mat4 projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 250.0);
 	mat4 worldToViewMatrix = cameraPlacement();

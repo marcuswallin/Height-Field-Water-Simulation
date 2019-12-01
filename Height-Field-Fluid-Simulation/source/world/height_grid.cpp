@@ -12,6 +12,7 @@ HeightGrid::HeightGrid(int grid_x, int grid_z, bool initiate_array) :
 	}
 }
 
+
 HeightGrid::HeightGrid(const HeightGrid& h) : 
 	grid_size_x { h.grid_size_x }, grid_size_z{ h.grid_size_z }{
 	height_array = new vec4[grid_size_x * grid_size_z];

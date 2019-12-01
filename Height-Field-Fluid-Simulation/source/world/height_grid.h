@@ -14,6 +14,7 @@ public:
 	HeightGrid() = default;
 	HeightGrid(int grid_x, int grid_z, bool intitiate_array);
 	HeightGrid(const HeightGrid &h);
+	~HeightGrid() = default;
 
 	/*
 	contains information about height of the grid;

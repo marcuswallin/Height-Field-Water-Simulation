@@ -45,6 +45,10 @@ void WaterMass::init_program(const mat4* proj_mat) {
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+
 	//change this part later
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, grid_size_x, grid_size_z, 0,
 		GL_RGBA, GL_FLOAT, &height_array[0].x);//&smoke_array[0].pos.x);
@@ -131,7 +135,9 @@ void WaterMass::calculate_movements() {
 			}*/
 		}
 	}
+	delete this->height_array;
 	height_array = height_copy.height_array;
+	
 	velocity_integration();
 }
 
