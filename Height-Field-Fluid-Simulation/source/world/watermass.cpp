@@ -15,7 +15,8 @@ WaterMass::WaterMass(Terrain& terrain,
 	model = GenerateTerrain(this, true, resolution);
 }
 
-void WaterMass::draw(const mat4& cam_mat, int time_diff, bool calc_water){
+void WaterMass::draw(const mat4& cam_mat, int time_diff, 
+	bool calc_water, bool show_grid){
 	glUseProgram(program);
 	mat4 model_world = T(x_offset, 0, z_offset); //change this
 	//model_to_view = cam_matrix * model_world;
@@ -28,7 +29,10 @@ void WaterMass::draw(const mat4& cam_mat, int time_diff, bool calc_water){
 		GL_RGBA, GL_FLOAT, &height_array[0].x);
 	glUniform1i(glGetUniformLocation(program, "waterHeight"), 15);
 	//glActiveTexture(GL_TEXTURE2);
-	glUniform1i(glGetUniformLocation(program, "tex"), 2);
+	if(show_grid)
+		glUniform1i(glGetUniformLocation(program, "tex"), 2);
+	else
+		glUniform1i(glGetUniformLocation(program, "tex"), 3);
 
 	DrawModel(model, program, "inPosition", NULL, "inTexCoord");
 

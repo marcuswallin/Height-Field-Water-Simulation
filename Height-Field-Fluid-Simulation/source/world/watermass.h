@@ -23,7 +23,7 @@ public:
 	int z_offset;
 
 	 
-	void draw(const mat4& cam_mat, int time_diff, bool calc_water);
+	void draw(const mat4& cam_mat, int time_diff, bool calc_water, bool show_grid);
 	void init_program(const mat4* proj_mat);
 	void calculate_movements();
 

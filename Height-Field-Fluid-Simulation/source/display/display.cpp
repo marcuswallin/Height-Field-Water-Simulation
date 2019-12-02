@@ -9,10 +9,11 @@ int time_diff;
 
 Model* m, * skybox_model;
 GLuint sky_program;
-TextureData ground_color_tex, skybox_tex, water_color_tex;
+TextureData ground_color_tex, skybox_tex, water_color_tex, grid_tex;
 
 bool calc_water = false;
 bool print_time = false;
+bool display_grid = false;
 
 //World world{};
 World world;
@@ -26,6 +27,9 @@ void init(void)
 	glEnable(GL_DEPTH_TEST);
 	//glEnable(GL_CULL_FACE);
 	//glCullFace(GL_TRUE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 
 	//vec3 start_pos = SetVector(120, 10,140);
 	vec3 start_pos = SetVector(60, 10,90);
@@ -59,7 +63,9 @@ void init(void)
 	glActiveTexture(GL_TEXTURE1);
 	LoadTGATexture("textures/SkyBox512.tga", &skybox_tex);
 	glActiveTexture(GL_TEXTURE2);
-	LoadTGATexture("textures/grid_dots_clipped.tga", &water_color_tex);
+	LoadTGATexture("textures/grid_dots_clipped.tga", &grid_tex);
+	glActiveTexture(GL_TEXTURE3);
+	LoadTGATexture("textures/water512.tga", &water_color_tex);
 
 
 	world.terrain.init_program(projectionMatrix, worldToViewMatrix);
@@ -75,12 +81,9 @@ int old_t;
 void display(void)
 {
 	mat4 model_to_view, cam_matrix, model_world;
-	
 	// start
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	printError("pre display");
-
-
 	keyboard_interaction();
 
 	//set up matrices
@@ -95,14 +98,10 @@ void display(void)
 	glEnable(GL_DEPTH_TEST);
 
 	world.terrain.draw(cam_matrix, model_to_view);
-	
-	
 	int start_t = glutGet(GLUT_ELAPSED_TIME);
 
-
-
 	// = start_t;
-	world.water.draw(cam_matrix, time_diff, calc_water);
+	world.water.draw(cam_matrix, time_diff, calc_water, display_grid);
 	int end_t = glutGet(GLUT_ELAPSED_TIME);
 	
 	if (print_time) {
@@ -144,8 +143,17 @@ void keyboard_interaction() {
 		print_time = !print_time;
 		key_is_down = true;
 	}
+	if(glutKeyIsDown('g') && !key_is_down)
+	{
+		if (display_grid)
+			glEnable(GL_BLEND);
+		else
+			glDisable(GL_BLEND);
 
-	if(!glutKeyIsDown('p') && !glutKeyIsDown('t') && key_is_down)
+		display_grid = !display_grid;
+		key_is_down = true;
+	}
+	if(!glutKeyIsDown('p') && !glutKeyIsDown('t') && !glutKeyIsDown('g') && key_is_down)
 		key_is_down = false;
 }
 

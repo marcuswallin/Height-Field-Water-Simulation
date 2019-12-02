@@ -29,12 +29,16 @@ void main(void)
 	vec3 v = normalize(- exSurfaceG);
 	float specular = dot(r,v);
 	if (specular > 0.0)
-		specular = 1.0 * pow(specular, 200.0);
+		specular = 1.0 * pow(specular, 250.0);
 
 	specular = clamp(specular, 0, 1);
 
 
 	shade = diffuse + specular;
 	// vec4(water_heightG);
-    outColor = vec4(shade, shade, shade, 1.0)*texture(tex, texCoordG);
+	vec4 color = vec4(shade, shade, shade, 1.0)*texture(tex, texCoordG);
+	//temporary workaround
+
+	color.a = clamp(water_heightG/2, 0.0, 1.0);
+    outColor = color;
 }
