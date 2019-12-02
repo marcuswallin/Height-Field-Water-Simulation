@@ -32,7 +32,7 @@ void init(void)
 
 
 	//vec3 start_pos = SetVector(120, 10,140);
-	vec3 start_pos = SetVector(60, 10,90);
+	vec3 start_pos = SetVector(40, 20,180);
 
 
 	int x_size = 60;

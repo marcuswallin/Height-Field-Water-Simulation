@@ -37,7 +37,7 @@ private:
 
 	//the shaders used by watermass
 	GLuint program;
-
+	
 	//coeffiecients for calculation
 	double friction_c = 0.1;
 	double gravity = 9.82;
