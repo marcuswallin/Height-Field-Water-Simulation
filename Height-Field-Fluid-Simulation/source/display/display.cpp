@@ -45,7 +45,7 @@ void init(void)
 	
 	world = World("textures/fft-terrain.tga", 
 		start_pos.x - x_size/2, start_pos.x + x_size/2, start_pos.z - 30 - z_size/2, 
-		start_pos.z - 30 + z_size/2, 1 , water_resolution, time_diff);
+		start_pos.z - 30 + z_size/2, 0.5 , water_resolution, time_diff);
 	
 	mat4 projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 250.0);
 	mat4 worldToViewMatrix = cameraPlacement();
@@ -59,7 +59,7 @@ void init(void)
 	glActiveTexture(GL_TEXTURE1);
 	LoadTGATexture("textures/SkyBox512.tga", &skybox_tex);
 	glActiveTexture(GL_TEXTURE2);
-	LoadTGATexture("textures/water_water_0024_03_tiled_s.tga", &water_color_tex);
+	LoadTGATexture("textures/grid_dots_clipped.tga", &water_color_tex);
 
 
 	world.terrain.init_program(projectionMatrix, worldToViewMatrix);

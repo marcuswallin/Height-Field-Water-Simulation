@@ -5,28 +5,36 @@ uniform sampler2D waterHeight;
 uniform sampler2D tex;
 uniform mat4 camMatrix;
 
-in vec3 exSurface;
-in vec3 exNormal;
-in vec2 texCoord;
+in vec3 exSurfaceG;
+in vec3 exNormalG;
+in vec2 texCoordG;
+in float water_heightG;
 
 void main(void)
 {
     vec4 pos = gl_FragCoord;
 
-
-
 	float diffuse, shade;
-	vec3 light = vec3(-1,1,-1);
+	vec3 light = vec3(-1,1,-0.6);
 	mat3 lightMatrix = mat3(camMatrix);
 	lightMatrix = transpose(inverse(lightMatrix));
 	vec3 lightView = mat3(lightMatrix) * light;
 
-	diffuse = dot(normalize(exNormal), normalize( lightView));
+	diffuse = dot(normalize(exNormalG), normalize( lightView));
 	diffuse = clamp(diffuse, 0, 1);
-	shade = diffuse;
 
-    //outColor =  shade*vec4(0.1,0.1,1, 1.0);
-	
-    outColor = texture(waterHeight, texCoord)/10;
-    
+	//specular
+	vec3 r = normalize(reflect(- lightView, normalize(exNormalG)));
+		
+	vec3 v = normalize(- exSurfaceG);
+	float specular = dot(r,v);
+	if (specular > 0.0)
+		specular = 1.0 * pow(specular, 200.0);
+
+	specular = clamp(specular, 0, 1);
+
+
+	shade = diffuse + specular;
+	// vec4(water_heightG);
+    outColor = vec4(shade, shade, shade, 1.0)*texture(tex, texCoordG);
 }

@@ -18,7 +18,7 @@ public:
 		int x_start, int x_end, int z_start, int z_end, float offset, int resolution, int timestep_length);
 	WaterMass(const WaterMass& w) = default;
 	WaterMass & operator=(const WaterMass& w) = default;
-
+	~WaterMass() = default;
 	int x_offset;
 	int z_offset;
 

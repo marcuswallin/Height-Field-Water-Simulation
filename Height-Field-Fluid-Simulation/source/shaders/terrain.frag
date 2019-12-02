@@ -21,7 +21,7 @@ void main(void)
 	shade = diffuse;
 
 
-
+	//
     outColor = vec4(shade, shade, shade, 1.0) * texture(tex, texCoord);
 
 }

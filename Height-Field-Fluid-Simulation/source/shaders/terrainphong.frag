@@ -10,35 +10,39 @@ in vec2 texCoord;
 
 void main(void)
 {
-float diffuse, specular, shade;
-vec3 color = vec3(0);
-vec3 v = normalize(- exSurface);
-vec3 r;
-//for (int i = 0; i < 3; i++){
-		vec3 light = vec3(-1,1,-1);
-        vec3 lightView;
-		float intensity = 0.5;
+	float diffuse, specular, shade;
+	vec3 color = vec3(0);
+	vec3 v = normalize(- exSurface);
+	vec3 r;
 
-		mat3 lightMatrix = mat3(camMatrix);
-		lightMatrix = transpose(inverse(lightMatrix));
-		lightView = mat3(lightMatrix) * light;
+	vec3 light = vec3(-1,1,-1);
+    vec3 lightView;
+	//float intensity = 0.5;
 
-		diffuse = dot(normalize(exNormal), normalize( lightView));
+	//diffuse
+	mat3 lightMatrix = mat3(camMatrix);
+	lightMatrix = transpose(inverse(lightMatrix));
+	lightView = mat3(lightMatrix) * light;
 
-		diffuse = clamp(diffuse, 0, 1);
+	diffuse = dot(normalize(exNormal), normalize( lightView));
 
-		r = normalize(reflect(- lightView, normalize(exNormal)));
+	diffuse = clamp(diffuse, 0, 1);
+
+	//specular
+	r = normalize(reflect(- lightView, normalize(exNormal)));
 		
 	
-		specular = dot(r,v);
-		if (specular > 0.0)
-			specular = 1.0 * pow(specular, 50.0);
+	specular = dot(r,v);
+	if (specular > 0.0)
+		specular = 1.0 * pow(specular, 50.0);
 
-		specular = clamp(specular, 0, 1);
-		shade =   diffuse  + specular;
+	specular = clamp(specular, 0, 1);
 
-		color = vec3(shade);
- // }
+
+
+	shade =   diffuse  + specular;
+	color = vec3(shade);
+
     outColor = vec4(color, 1.0) * texture(tex, texCoord);
 
 }
