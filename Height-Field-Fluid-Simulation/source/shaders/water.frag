@@ -36,9 +36,9 @@ void main(void)
 
 	shade = diffuse + specular;
 	// vec4(water_heightG);
-	vec4 color = vec4(shade, shade, shade, 1.0)*texture(tex, texCoordG);
+	vec4 color = vec4(shade*0.5, shade*0.5, shade, 1.0);//texture(tex, texCoordG);
 	//temporary workaround
 
-	color.a = clamp(water_heightG/2, 0.0, 1.0);
+	color.a = clamp(water_heightG, 0.1, 0.99);
     outColor = color;
 }
