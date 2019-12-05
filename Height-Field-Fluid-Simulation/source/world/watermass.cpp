@@ -76,7 +76,8 @@ void WaterMass::gen_water_from_terrain(Terrain& terrain,
 	for (int z = 0; z < grid_size_z; ++z)
 		for (int x = 0; x < grid_size_x; ++x) {
 			
-			vec4* t_height = terrain.at(x / resolution + x_start, z / resolution + z_start);
+			vec4* t_height = terrain.at(x / resolution + x_start, 
+										z / resolution + z_start);
 
 			//stores water depth in x
 			at(x, z)->x = offset;
@@ -90,7 +91,9 @@ void WaterMass::gen_water_from_terrain(Terrain& terrain,
 			if (z % resolution != 0)
 				off_z = (float)(z % resolution) / resolution;
 
-			float height = terrain.interpolate_height(x / resolution + x_start, z / resolution + z_start, 
+			float height = terrain.interpolate_height(
+				x / resolution + x_start, 
+				z / resolution + z_start, 
 				off_x, off_z);
 			at(x, z)->y = height; //t_height->x;
 	
@@ -110,7 +113,8 @@ void WaterMass::calculate_movements() {
 			vec4* h = height_copy.at(x, z);
 
 			float dhdt = get_height_derivative(x, z);
-			h->x += dhdt * deltat;
+			float advection = get_advection_h(x, z);
+			h->x += (dhdt + advection)* deltat;
 			if (h->x < 0){
 				h->x = 0;
 			}
@@ -120,7 +124,8 @@ void WaterMass::calculate_movements() {
 				vec4* h_zp = height_copy.at(x, z + 1);
 				vec4* h_zm = height_copy.at(x, z - 1);
 
-				//this should be separate function
+				//this should be separate function, does not work now
+				will prbably not use
 				if ((h->x + h->y) - (h_xm->x + h_xm->y) > lambda_edge &&
 					(h->x + h->y) > (h_xp->x + h_xp->y))
 					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_xp->x) - h->x));
@@ -210,30 +215,20 @@ float WaterMass::get_hbar_z(int x, int z, int x_offset, int z_offset)
 	return hbar;
 }
 
-//IS PROPERLY TESTED
-
 //returns a velocity v_(x+offset/2),(z+offset/2)
 //offsets are either -1, 0 +1
 // one offset must be 0, the other -1 or 1, does not check for this
 vec4* WaterMass::get_velocity(int x, int z, int x_offset, int z_offset)
 {
-	if (x_offset < -1 || x_offset > 1 || z_offset < -1 || z_offset > 1) {
-		throw invalid_argument("x_offset or z_offset not within {-1, 1}");
-	}
-
 	int tmp_x = x_offset;
-	if (x_offset == -1) {
+	if (x_offset == -1) 
 		tmp_x = 0;
-	}
 	int x_vel = x + tmp_x;
-
-	int z_vel;
 	
-	if (z_offset == -1) {
+
+	if (z_offset == -1) 
 		z_offset = 0;
-	}
-	z_vel = (z + z_offset) * 2;
-	//we know to look in odd z numbers
+	int z_vel = (z + z_offset) * 2;
 	if (x_offset != 0)
 		z_vel += 1;
 
@@ -248,15 +243,17 @@ void WaterMass::velocity_integration(void) {
 			vec4 * v_xplus = get_velocity(x, z, 1, 0);
 			vec4* v_zplus = get_velocity(x, z, 0, 1);
 			vec4* h = at(x, z);
+			vec4* h_zplus = at(x, z + 1);
+			vec4* h_xplus = at(x+1, z);
 
 			//reflective
-			if (x+1 >= grid_size_x || is_reflective_x(x,z)) {
+			if (x+1 >= grid_size_x || is_reflective(h,h_xplus)) {
 				v_xplus->x = 0;
 			}
 			else {
-				vec4* h_xplus = at(x + 1, z);
 				v_xplus->x += -(gravity * resolution ) * deltat *
 					((h_xplus->x + h_xplus->y) - (h->x + h->y));
+				//v_xplus->x = min(v_xplus->x, a_vel * 1 / deltat);
 				if (v_xplus->x > a_vel * 1 / deltat) {
 					v_xplus->x = a_vel * 1 / deltat;
 				}
@@ -264,13 +261,13 @@ void WaterMass::velocity_integration(void) {
 			}
 
 			//reflective
-			if (z + 1 >= grid_size_z || is_reflective_z(x, z)) {
+			if (z + 1 >= grid_size_z || is_reflective(h, h_zplus)) {
 				v_zplus->z = 0;
 			}
 			else {
-				vec4* h_zplus = at(x, z + 1);
 				v_zplus->z += -(gravity * resolution) * deltat *
 					((h_zplus->x + h_zplus->y) - (h->x + h->y));
+				//v_zplus->z = min(v_zplus->z, a_vel * 1 / deltat);
 				if (v_zplus->z > a_vel * 1 / deltat) {
 					v_zplus->z = a_vel * 1 / deltat;
 				}
@@ -283,38 +280,24 @@ void WaterMass::velocity_integration(void) {
 
 //checks if water is so close to the ground that it should be dry 
 //should have input either x_offset = 1 or z_offset = 1
-bool WaterMass::is_reflective_x(int x, int z) {
+bool WaterMass::is_reflective(vec4* here, vec4* here_plus) {
 
-	vec4* h = at(x, z);
-	vec4* h_plus = at(x+1, z);
-	bool first_cond = h->x <= ground_e && h->y > (h_plus->x + h_plus->y);
-	bool second_cond = h_plus->x <= ground_e && h_plus->y > (h->x + h->y);
+	bool first_cond = here->x <= ground_e && here->y > (here_plus->x + here_plus->y);
+	bool second_cond = here_plus->x <= ground_e && here_plus->y > (here->x + here->y);
 	return first_cond || second_cond;
-
 }
 
 
-//same as above but for z
-bool WaterMass::is_reflective_z(int x, int z) {
 
-	vec4* h = at(x, z);
-	vec4* h_plus = at(x, z+1);
-	bool first_cond = h->x <= ground_e && h->y > (h_plus->x + h_plus->y);
-	bool second_cond = h_plus->x <= ground_e && h_plus->y > (h->x + h->y);
-	return first_cond || second_cond;
 
+//ADVECTIONいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいい
+//ADVECTIONいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいい
+//ADVECTIONいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいい
+
+float WaterMass::get_advection_h(int x, int z) {
+
+	//if x+1 >= grid_size_x
+	//do the minus derivative instead, and same for z
+
+	return 0;
 }
-
-
-/*get_velocity(0, 0, 0, -1);
-get_velocity(0, 0, 0, 1);
-get_velocity(1, 0, 1, 0);
-get_velocity(0, 0, 1, 0);
-get_velocity(1, 0, -1, 0);
-get_velocity(1, 1, -1, 0);
-get_velocity(1, 2, 1, 0);
-get_velocity(1, 2, 0, 1);
-get_velocity(1, 2, 0, -1);
-get_velocity(2, 1, -1, 0);
-get_velocity(2, 1, 1, 0);
-*/

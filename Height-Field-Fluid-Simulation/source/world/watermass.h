@@ -48,7 +48,7 @@ private:
 	float alpha_edge = 0.3;
 
 	//in seconds
-	double deltat;
+	GLfloat deltat;
 	int resolution;
 
 	//stores velocities in the x and z parts
@@ -58,10 +58,10 @@ private:
 	vec4* get_velocity(int x, int z, int x_offset, int z_offset);
 	float get_hbar_x(int x, int z, int x_offset, int z_offset);
 	float get_hbar_z(int x, int z, int x_offset, int z_offset);
-	bool WaterMass::is_reflective_x(int x, int z);
-	bool WaterMass::is_reflective_z(int x, int z);
+	bool WaterMass::is_reflective(vec4* here, vec4* here_plus);
 	void WaterMass::velocity_integration(void);
 	float friction_force(float vel);
+	float get_advection_h(int x, int z);
 
 };
 

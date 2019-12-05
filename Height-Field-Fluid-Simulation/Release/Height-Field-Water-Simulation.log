@@ -1,0 +1,21 @@
+﻿  GL_utilities.c
+  loadobj.c
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\GL_utilities.h(12,12): fatal error C1083: Cannot open include file: 'glew.h': No such file or directory
+  LoadTGA.c
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\loadobj.h(12,12): fatal error C1083: Cannot open include file: 'glew.h': No such file or directory
+  VectorUtils3.c
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\LoadTGA.h(12,12): fatal error C1083: Cannot open include file: 'glew.h': No such file or directory
+  glew.c
+  MicroGlut.c
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(11,12): fatal error C1083: Cannot open include file: 'glew.h': No such file or directory
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(224,1): warning C4133: 'function': incompatible types - from 'char [9]' to 'LPCWSTR'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(364,56): warning C4293: '<<': shift count negative or too big, undefined behavior
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(434,46): warning C4047: 'function': 'LPWORD' differs in levels of indirection from 'unsigned char (*)[2]'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(434,46): warning C4024: 'ToAsciiEx': different types for formal and actual parameter 4
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(601,31): warning C4133: '=': incompatible types - from 'char [9]' to 'LPCWSTR'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(604,6): warning C4013: 'main' undefined; assuming extern returning int
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(641,34): warning C4013: 'malloc' undefined; assuming extern returning int
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(724,9): warning C4013: 'free' undefined; assuming extern returning int
+  cameracontrol.c
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(789,6): warning C4101: 'windowHDC': unreferenced local variable
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\cameracontrol.c(7,10): fatal error C1083: Cannot open include file: 'MicroGlut.h': No such file or directory

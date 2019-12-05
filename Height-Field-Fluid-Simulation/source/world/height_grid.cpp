@@ -21,10 +21,10 @@ HeightGrid::HeightGrid(const HeightGrid& h) :
 	}
 }
 
+//returns 0 if outside grid, should be handled elsewhere
 vec4* HeightGrid::at(int x, int z) {
 	if (x < 0 || x >= grid_size_x || z < 0 || z >= grid_size_z)
-		throw invalid_argument("Trying to get element outside heightgrid at: x="
-			+ to_string(x) + " z=" + to_string(z));
+		return new vec4{ 0,0,0,0 };
 	return &height_array[x + z * grid_size_x];
 }
 

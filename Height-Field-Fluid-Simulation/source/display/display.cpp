@@ -98,15 +98,15 @@ void display(void)
 	glEnable(GL_DEPTH_TEST);
 
 	world.terrain.draw(cam_matrix, model_to_view);
-	int start_t = glutGet(GLUT_ELAPSED_TIME);
+	//int start_t = glutGet(GLUT_ELAPSED_TIME);
 
-	// = start_t;
+    int start_t = glutGet(GLUT_ELAPSED_TIME);
 	world.water.draw(cam_matrix, time_diff, calc_water, display_grid);
 	int end_t = glutGet(GLUT_ELAPSED_TIME);
 	
 	if (print_time) {
 	//	old_t++;
-		cout << "Update freq: " + to_string(start_t-old_t) << endl;
+		cout << "Calc time: " + to_string(end_t-start_t) << endl;
 	}
 		
 	old_t = start_t;
