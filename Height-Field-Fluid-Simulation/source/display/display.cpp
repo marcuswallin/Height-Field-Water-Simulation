@@ -14,6 +14,8 @@ TextureData ground_color_tex, skybox_tex, water_color_tex, grid_tex;
 bool calc_water = false;
 bool print_time = false;
 bool display_grid = false;
+bool calc_GPU = false;
+
 
 //World world{};
 World world;
@@ -33,7 +35,6 @@ void init(void)
 
 	//vec3 start_pos = SetVector(120, 10,140);
 	vec3 start_pos = SetVector(90, 20,150);
-
 
 	int x_size = 50;
 	int z_size = 50;
@@ -86,6 +87,11 @@ void display(void)
 	printError("pre display");
 	keyboard_interaction();
 
+	if (calc_GPU) {
+		//world.water.calculate_GPU();
+	}
+
+
 	//set up matrices
 	cam_matrix = cameraPlacement();
 	model_world = IdentityMatrix(); //change this
@@ -98,10 +104,8 @@ void display(void)
 	glEnable(GL_DEPTH_TEST);
 
 	world.terrain.draw(cam_matrix, model_to_view);
-	//int start_t = glutGet(GLUT_ELAPSED_TIME);
-
     int start_t = glutGet(GLUT_ELAPSED_TIME);
-	world.water.draw(cam_matrix, time_diff, calc_water, display_grid);
+	world.water.draw(cam_matrix, time_diff, calc_water, display_grid, calc_GPU);
 	int end_t = glutGet(GLUT_ELAPSED_TIME);
 	
 	if (print_time) {
@@ -143,6 +147,11 @@ void keyboard_interaction() {
 		print_time = !print_time;
 		key_is_down = true;
 	}
+	if (glutKeyIsDown('f') && !key_is_down)
+	{
+		calc_GPU = !calc_GPU;
+		key_is_down = true;
+	}
 	if(glutKeyIsDown('g') && !key_is_down)
 	{
 		if (display_grid)
@@ -153,7 +162,8 @@ void keyboard_interaction() {
 		display_grid = !display_grid;
 		key_is_down = true;
 	}
-	if(!glutKeyIsDown('p') && !glutKeyIsDown('t') && !glutKeyIsDown('g') && key_is_down)
+	if(	!glutKeyIsDown('p') && !glutKeyIsDown('t') && 
+		!glutKeyIsDown('g') && !glutKeyIsDown('f') && key_is_down)
 		key_is_down = false;
 }
 

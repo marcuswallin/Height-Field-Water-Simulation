@@ -23,17 +23,20 @@ public:
 	int z_offset;
 
 	 
-	void draw(const mat4& cam_mat, int time_diff, bool calc_water, bool show_grid);
+	void draw(const mat4& cam_mat, int time_diff, bool calc_water, bool show_grid, bool calc_GPU);
 	void init_program(const mat4* proj_mat);
 	void calculate_movements();
-
+	void calculate_GPU();
 private:
 	void gen_water_from_terrain( Terrain&,
 		int x_start, int x_end, int z_start, int z_end, float offset, int resolution);
 
 	//the texture that the height was read from
 	GLuint water_height_tex;
+	FBOstruct *water_FBO;
 	TextureData water_color_tex;
+	Model* square_model;
+	GLuint GPU_program;
 
 	//the shaders used by watermass
 	GLuint program;
@@ -63,6 +66,8 @@ private:
 	float friction_force(float vel);
 	float get_advection_h(int x, int z);
 	void advect_velocities(void);
+	void GPU_init();
+
 
 };
 

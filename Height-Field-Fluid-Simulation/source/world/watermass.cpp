@@ -16,15 +16,24 @@ WaterMass::WaterMass(Terrain& terrain,
 }
 
 void WaterMass::draw(const mat4& cam_mat, int time_diff, 
-	bool calc_water, bool show_grid){
+	bool calc_water, bool show_grid, bool calc_GPU){
+
+
+
+
 	glUseProgram(program);
+
+	if (calc_water) {
+		if (!calc_GPU)
+			calculate_movements();
+	}
+
 	mat4 model_world = T(x_offset, 0, z_offset); //change this
 	//model_to_view = cam_matrix * model_world;
 	glUniformMatrix4fv(glGetUniformLocation(program, "camMatrix"), 1, GL_TRUE, cam_mat.m);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, model_world.m);
 
-	if (calc_water) calculate_movements();
-
+	glActiveTexture(GL_TEXTURE15);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, grid_size_x, grid_size_z, 0,
 		GL_RGBA, GL_FLOAT, &height_array[0].x);
 	glUniform1i(glGetUniformLocation(program, "waterHeight"), 15);
@@ -55,8 +64,8 @@ void WaterMass::init_program(const mat4* proj_mat) {
 
 	//change this part later
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, grid_size_x, grid_size_z, 0,
-		GL_RGBA, GL_FLOAT, &height_array[0].x);//&smoke_array[0].pos.x);
-	//water_program should be coitained by watermass
+		GL_RGBA, GL_FLOAT, &height_array[0].x);
+
 	glUniform1i(glGetUniformLocation(program, "waterHeight"), 15);
 	glUniform1i(glGetUniformLocation(program, "resolution"), resolution);
 	glUniform1i(glGetUniformLocation(program, "grid_x"), grid_size_x);
@@ -65,8 +74,36 @@ void WaterMass::init_program(const mat4* proj_mat) {
 
 	glUniform1i(glGetUniformLocation(program, "tex"), 2);
 
+	//GPU_init();
 }
 
+
+void WaterMass::GPU_init()
+{
+
+	GPU_program = loadShaders("source/shaders/passthrough.vert",
+		"source/shaders/GPU_calc.frag");
+	glUseProgram(GPU_program);
+	glActiveTexture(GL_TEXTURE14);
+	water_FBO = initFBO(grid_size_x, grid_size_z, 0);
+
+	GLfloat square[] = {
+							-1,-1,0,
+							-1,1, 0,
+							1,1, 0,
+							1,-1, 0 };
+	GLfloat squareTexCoord[] = {
+								 0, 0,
+								 0, 1,
+								 1, 1,
+								 1, 0 };
+	GLuint squareIndices[] = { 0, 1, 2, 0, 2, 3 };
+
+	square_model = LoadDataToModel(
+		square, NULL, squareTexCoord, NULL,
+		squareIndices, 4, 6);
+
+}
 
 //generates the height_vetor from the terrain
 //resolution is the number of nodes per ground grid
@@ -100,6 +137,27 @@ void WaterMass::gen_water_from_terrain(Terrain& terrain,
 		}
 }
 
+
+//calculates water on the GPU
+void WaterMass::calculate_GPU() {
+	glUseProgram(GPU_program);
+	glUniform1i(glGetUniformLocation(GPU_program, "texUnit"), 14);
+	useFBO(water_FBO, 0L, 0L);
+	DrawModel(square_model, GPU_program, "in_Position", NULL, "in_TexCoord");
+	glFlush();
+	return;
+}
+
+
+
+
+
+
+
+//CPU CALCULATIONS¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+//CPU CALCULATIONS¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+//CPU CALCULATIONS¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+//CPU CALCULATIONS¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
 
 void WaterMass::calculate_movements() {
 

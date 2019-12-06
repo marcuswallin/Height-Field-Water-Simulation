@@ -96,6 +96,8 @@
     <ClCompile Include="source\world\world_generator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="source\shaders\GPU_calc.frag" />
+    <None Include="source\shaders\passthrough.vert" />
     <None Include="source\shaders\skybox.frag" />
     <None Include="source\shaders\skybox.vert" />
     <None Include="source\shaders\terrain.frag" />
