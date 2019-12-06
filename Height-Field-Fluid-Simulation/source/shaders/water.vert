@@ -25,13 +25,8 @@ void main(void)
 
     int grid_res_x = grid_x / resolution;
     int grid_res_z = grid_z / resolution;
-	//float tex_x = mod(float(inPosition.x)+0.001 , grid_res_x ) / grid_res_x;
-//	float tex_z = mod(float(inPosition.z)+0.001, grid_res_z) / grid_res_z;
-//	float tex_x_plus = mod(float(inPosition.x+1.0/resolution)+0.001 , grid_res_x ) / grid_res_x;
-//	float tex_z_plus = mod(float(inPosition.z+1.0/resolution)+0.001, grid_res_z) / grid_res_z;
-//	float tex_x_minus = mod(float(inPosition.x-1.0/resolution)+0.001 , grid_res_x ) / grid_res_x;
-//	float tex_z_minus = mod(float(inPosition.z-1.0/resolution)+0.001, grid_res_z) / grid_res_z;
-//	
+
+	//can add more here later
 	float tex_x = float((inPosition.x)+0.001)  / grid_res_x;
 	float tex_z = float((inPosition.z)+0.001) / grid_res_z;
 	float tex_x_plus = float((inPosition.x+1.0/resolution)+0.001) / grid_res_x;
@@ -44,7 +39,7 @@ void main(void)
 	vec4 h_xplus = texture(waterHeight, vec2(tex_x_plus, tex_z));
 	vec4 h_xminus = texture(waterHeight, vec2(tex_x_minus, tex_z));
 	vec4 h_zplus = texture(waterHeight, vec2(tex_x, tex_z_plus));
-	vec4 h_zminus = texture(waterHeight, vec2(tex_x_plus, tex_z_minus));
+	vec4 h_zminus = texture(waterHeight, vec2(tex_x, tex_z_minus));
 
 	vec3 vec_h = vec3(0, heights.x + heights.y,0);
 	

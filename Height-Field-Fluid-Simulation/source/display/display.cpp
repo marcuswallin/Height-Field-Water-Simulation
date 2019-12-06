@@ -32,12 +32,12 @@ void init(void)
 
 
 	//vec3 start_pos = SetVector(120, 10,140);
-	vec3 start_pos = SetVector(40, 20,180);
+	vec3 start_pos = SetVector(90, 20,150);
 
 
-	int x_size = 60;
-	int z_size = 60;
-	int water_resolution = 2;
+	int x_size = 50;
+	int z_size = 50;
+	int water_resolution =2;
 
 	initControls(start_pos, 0, M_PI / 2);
 	
@@ -49,7 +49,7 @@ void init(void)
 	
 	world = World("textures/fft-terrain.tga", 
 		start_pos.x - x_size/2, start_pos.x + x_size/2, start_pos.z - 30 - z_size/2, 
-		start_pos.z - 30 + z_size/2, 0.5 , water_resolution, time_diff);
+		start_pos.z - 30 + z_size/2, 2 , water_resolution, time_diff);
 	
 	mat4 projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 250.0);
 	mat4 worldToViewMatrix = cameraPlacement();

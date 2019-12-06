@@ -101,11 +101,11 @@ void WaterMass::gen_water_from_terrain(Terrain& terrain,
 }
 
 
-
-//timestep in milliseconds
 void WaterMass::calculate_movements() {
+
+	//advect_velocities();
+	
 	HeightGrid height_copy{ *this };
-	//float time = (float)glutGet(GLUT_ELAPSED_TIME) / 100.0;
 	for (int z = 0; z < grid_size_z; ++z) {
 		for (int x = 0; x < grid_size_x; x++)
 		{
@@ -114,36 +114,15 @@ void WaterMass::calculate_movements() {
 
 			float dhdt = get_height_derivative(x, z);
 			float advection = get_advection_h(x, z);
+			if(x==50 && z == 170)
+				cout << dhdt/advection << endl;
 			h->x += (dhdt + advection)* deltat;
 			if (h->x < 0){
 				h->x = 0;
 			}
-			/*if (x != 0 && x != grid_size_x - 1 && z != 0 && z != grid_size_z - 1) {
-				vec4* h_xp = height_copy.at(x + 1, z);
-				vec4* h_xm = height_copy.at(x - 1, z);
-				vec4* h_zp = height_copy.at(x, z + 1);
-				vec4* h_zm = height_copy.at(x, z - 1);
-
-				//this should be separate function, does not work now
-				will prbably not use
-				if ((h->x + h->y) - (h_xm->x + h_xm->y) > lambda_edge &&
-					(h->x + h->y) > (h_xp->x + h_xp->y))
-					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_xp->x) - h->x));
-
-				if ((h->x + h->y) - (h_xp->x + h_xp->y) > lambda_edge &&
-					(h->x + h->y) > (h_xm->x + h_xm->y))
-					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_xm->x) - h->x));
-
-				if ((h->x + h->y) - (h_zm->x + h_zm->y) > lambda_edge &&
-					(h->x + h->y) > (h_zp->x + h_zp->y))
-					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_zp->x) - h->x));
-
-				if ((h->x + h->y) - (h_zp->x + h_zp->y) > lambda_edge &&
-					(h->x + h->y) > (h_zm->x + h_zm->y))
-					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_zm->x) - h->x));
-			}*/
 		}
 	}
+
 	delete this->height_array;
 	height_array = height_copy.height_array;
 	
@@ -295,9 +274,94 @@ bool WaterMass::is_reflective(vec4* here, vec4* here_plus) {
 //ADVECTIONいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいい
 
 float WaterMass::get_advection_h(int x, int z) {
-
 	//if x+1 >= grid_size_x
 	//do the minus derivative instead, and same for z
+	float adv{0};
+	//vec4* h = at(x, z);
+	vec4* h_zmin = at(x, z-1);
+	vec4* h_xmin = at(x-1, z);
+	vec4* h_xplus = at(x+1, z);
+	vec4* h_zplus = at(x, z+1);
+	vec4* v_xplus = get_velocity(x, z, 1, 0);
+	vec4* v_xminus = get_velocity(x, z, -1, 0);
+	vec4* v_zplus = get_velocity(x, z, 0, 1);
+	vec4* v_zminus = get_velocity(x, z, 0, -1);
 
-	return 0;
+	//advection in x direction
+	adv -= 0.5*(h_xplus->x - h_xmin->x) * (resolution/2) * (v_xplus->x + v_xminus->x) / 2;
+	adv -= 0.5*(h_zplus->x - h_zmin->x) * (resolution/2) * (v_zplus->z + v_zminus->z) / 2;
+	return adv;
 }
+
+
+//NOT WORKING ATMいいいいいいいいいいいいいいいいいいいいいいいいいいいいいいい
+//should probably create a copy here
+void WaterMass::advect_velocities() {
+	for (int z = 0; z < grid_size_z; ++z) {
+		for (int x = 0; x < grid_size_x; x++)
+		{
+			vec4* h_xplus = at(x + 1, z);
+			vec4* h_zplus = at(x, z + 1);
+			vec4* v_xplus = get_velocity(x, z, 1, 0);
+			vec4* v_xplusplus = get_velocity(x+1, z, 1, 0);
+			vec4* v_zplus = get_velocity(x, z, 0, 1);
+			vec4* v_zplusplus = get_velocity(x, z+1, 0, 1);
+
+			float vd_xplus = (v_xplusplus->x - v_xplus->x) / 2;
+			if (x + 1 >= grid_size_x || is_reflective(at(x,z), h_xplus)) {
+				v_xplus->x = 0;
+			}
+			else {
+				v_xplus->x -= v_xplus->x * vd_xplus * (resolution / 2);
+			}
+
+			float vd_zplus = (v_zplusplus->z - v_zplus->z) / 2;
+			if (z + 1 >= grid_size_z || is_reflective(at(x, z), h_zplus)) {
+				v_zplus->z = 0;
+			}
+			else {
+				v_zplus->z -= v_xplus->z * vd_zplus * (resolution / 2);
+			}
+		}
+	}
+	return;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//for overshooting reduction
+			/*if (x != 0 && x != grid_size_x - 1 && z != 0 && z != grid_size_z - 1) {
+				vec4* h_xp = height_copy.at(x + 1, z);
+				vec4* h_xm = height_copy.at(x - 1, z);
+				vec4* h_zp = height_copy.at(x, z + 1);
+				vec4* h_zm = height_copy.at(x, z - 1);
+
+				//this should be separate function, does not work now
+				will prbably not use
+				if ((h->x + h->y) - (h_xm->x + h_xm->y) > lambda_edge &&
+					(h->x + h->y) > (h_xp->x + h_xp->y))
+					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_xp->x) - h->x));
+
+				if ((h->x + h->y) - (h_xp->x + h_xp->y) > lambda_edge &&
+					(h->x + h->y) > (h_xm->x + h_xm->y))
+					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_xm->x) - h->x));
+
+				if ((h->x + h->y) - (h_zm->x + h_zm->y) > lambda_edge &&
+					(h->x + h->y) > (h_zp->x + h_zp->y))
+					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_zp->x) - h->x));
+
+				if ((h->x + h->y) - (h_zp->x + h_zp->y) > lambda_edge &&
+					(h->x + h->y) > (h_zm->x + h_zm->y))
+					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_zm->x) - h->x));
+			}*/

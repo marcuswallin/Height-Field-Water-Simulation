@@ -62,6 +62,7 @@ private:
 	void WaterMass::velocity_integration(void);
 	float friction_force(float vel);
 	float get_advection_h(int x, int z);
+	void advect_velocities(void);
 
 };
 
