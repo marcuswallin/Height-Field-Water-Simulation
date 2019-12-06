@@ -32,7 +32,7 @@ private:
 		int x_start, int x_end, int z_start, int z_end, float offset, int resolution);
 
 	//the texture that the height was read from
-	GLuint water_height_tex;
+	FBOstruct * water_height_tex;
 	FBOstruct *water_FBO;
 	TextureData water_color_tex;
 	Model* square_model;

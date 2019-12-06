@@ -26,8 +26,8 @@ void Terrain::draw(const mat4& cam_mat, const mat4& mtv_mat) {
 	glUseProgram(program);
 	glUniformMatrix4fv(glGetUniformLocation(program, "camMatrix"), 1, GL_TRUE, cam_mat.m);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, mtv_mat.m);
-
-	glUniform1i(glGetUniformLocation(program, "tex"), 0);
+	glActiveTexture(GL_TEXTURE5);
+	glUniform1i(glGetUniformLocation(program, "tex"), 5);
 	//DrawModel(m, program, "inPosition", "inNormal", "inTexCoord");
 	DrawModel(model, program, "inPosition", "inNormal", "inTexCoord");
 

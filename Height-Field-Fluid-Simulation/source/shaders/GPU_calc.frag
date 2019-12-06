@@ -7,7 +7,9 @@ out vec4 out_Color;
 void main(void)
 {
   //  vec4 col = texture(texUnit, outTexCoord);
-    out_Color.r =1.0;
-    out_Color.g = 3.0;
+    out_Color.r =3-outTexCoord.x*3;
+    out_Color.g = 0;
     out_Color.b = 0;
+    out_Color.a = 1.0;
+
 }

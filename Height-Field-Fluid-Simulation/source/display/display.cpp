@@ -59,11 +59,11 @@ void init(void)
 	glUniformMatrix4fv(glGetUniformLocation(sky_program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
 
 	//textures-------------------------------------------------------
-	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE5);
 	LoadTGATexture( "textures/grass.tga", &ground_color_tex);
-	glActiveTexture(GL_TEXTURE1);
+	glActiveTexture(GL_TEXTURE6);
 	LoadTGATexture("textures/SkyBox512.tga", &skybox_tex);
-	glActiveTexture(GL_TEXTURE2);
+	glActiveTexture(GL_TEXTURE7);
 	LoadTGATexture("textures/grid_dots_clipped.tga", &grid_tex);
 	glActiveTexture(GL_TEXTURE3);
 	LoadTGATexture("textures/water512.tga", &water_color_tex);
@@ -88,7 +88,7 @@ void display(void)
 	keyboard_interaction();
 
 	if (calc_GPU) {
-		//world.water.calculate_GPU();
+		world.water.calculate_GPU();
 	}
 
 
@@ -98,12 +98,13 @@ void display(void)
 	model_to_view = cam_matrix * model_world;
 
 	//cout << get_view_pos().x << " "  << get_view_pos().y << " " << get_view_pos().z << endl;
-
+	
 	glUseProgram(sky_program);
 	draw_sky_box(&model_to_view);
 	glEnable(GL_DEPTH_TEST);
-
+	
 	world.terrain.draw(cam_matrix, model_to_view);
+
     int start_t = glutGet(GLUT_ELAPSED_TIME);
 	world.water.draw(cam_matrix, time_diff, calc_water, display_grid, calc_GPU);
 	int end_t = glutGet(GLUT_ELAPSED_TIME);
@@ -129,7 +130,7 @@ void draw_sky_box(const mat4 * mtv_matrix)
 	skymtv.m[11] = 0.0f;
 	glUniformMatrix4fv(glGetUniformLocation(sky_program, "mtvMatrix"), 1, GL_TRUE,
 		skymtv.m);
-	glUniform1i(glGetUniformLocation(sky_program, "tex"), 1);
+	glUniform1i(glGetUniformLocation(sky_program, "tex"), 6);
 	DrawModel(skybox_model, sky_program, "inPosition", NULL, "inTexCoord");
 }
 
