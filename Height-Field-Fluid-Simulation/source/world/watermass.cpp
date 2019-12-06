@@ -20,31 +20,28 @@ void WaterMass::draw(const mat4& cam_mat, int time_diff,
 
 	glUseProgram(program);
 
-	if (calc_water) {
-		if (!calc_GPU)
-			calculate_movements();
-	}
+	mat4 model_world = T(x_offset, 0, z_offset); 
 
-	mat4 model_world = T(x_offset, 0, z_offset); //change this
-	//model_to_view = cam_matrix * model_world;
 	glUniformMatrix4fv(glGetUniformLocation(program, "camMatrix"), 1, GL_TRUE, cam_mat.m);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, model_world.m);
 
-	//glActiveTexture(GL_TEXTURE1);
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, grid_size_x, grid_size_z, 0,
-	//	GL_RGBA, GL_FLOAT, &height_array[0].x);
-	
-	//glUniform1i(glGetUniformLocation(program, "waterHeight"),5);
-	//glActiveTexture(GL_TEXTURE2);
+	glActiveTexture(GL_TEXTURE0);
+	if(!calc_GPU)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, grid_size_x, grid_size_z, 0,
+			GL_RGBA, GL_FLOAT, &height_array[0].x);
+
 	if(show_grid)
 		glUniform1i(glGetUniformLocation(program, "tex"), 7);
 	else
 		glUniform1i(glGetUniformLocation(program, "tex"), 3);
-	glUniform1i(glGetUniformLocation(program, "waterHeight"), 1);
-	useFBO(0L, 0L, water_FBO);
-	DrawModel(model, program, "inPosition", NULL, "inTexCoord");
+	
+	useFBO(0L, water_height_tex, water_FBO);
 
+	DrawModel(model, program, "inPosition", NULL, "inTexCoord");
 }
+
+
+
 
 void WaterMass::init_program(const mat4* proj_mat) {
 	program = loadShadersG("source/shaders/water.vert", 
@@ -54,17 +51,16 @@ void WaterMass::init_program(const mat4* proj_mat) {
 	glActiveTexture(GL_TEXTURE0);
 	water_height_tex = initFBO(grid_size_x, grid_size_z, 0);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
 
 	//change this part later
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, grid_size_x, grid_size_z, 0,
 		GL_RGBA, GL_FLOAT, &height_array[0].x);
 
-	glUniform1i(glGetUniformLocation(program, "waterHeight"), 15);
+	glUniform1i(glGetUniformLocation(program, "waterHeight"), 0);
 	glUniform1i(glGetUniformLocation(program, "resolution"), resolution);
 	glUniform1i(glGetUniformLocation(program, "grid_x"), grid_size_x);
 	glUniform1i(glGetUniformLocation(program, "grid_z"), grid_size_z);
@@ -76,37 +72,6 @@ void WaterMass::init_program(const mat4* proj_mat) {
 }
 
 
-void WaterMass::GPU_init()
-{
-
-	GPU_program = loadShaders("source/shaders/passthrough.vert",
-		"source/shaders/GPU_calc.frag");
-	glUseProgram(GPU_program);
-	glActiveTexture(GL_TEXTURE1);
-	water_FBO = initFBO(grid_size_x, grid_size_z, 0);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-	GLfloat square[] = {
-							-1,-1,0,
-							-1,1, 0,
-							1,1, 0,
-							1,-1, 0 };
-	GLfloat squareTexCoord[] = {
-								 0, 0,
-								 0, 1,
-								 1, 1,
-								 1, 0 };
-	GLuint squareIndices[] = { 0, 1, 2, 0, 2, 3 };
-
-	square_model = LoadDataToModel(
-		square, NULL, squareTexCoord, NULL,
-		squareIndices, 4, 6);
-
-}
 
 //generates the height_vetor from the terrain
 //resolution is the number of nodes per ground grid
@@ -141,28 +106,61 @@ void WaterMass::gen_water_from_terrain(Terrain& terrain,
 }
 
 
+//GPU CALCULATIONS¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+//GPU CALCULATIONS¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+//GPU CALCULATIONS¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+//GPU CALCULATIONS¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
+
 //calculates water on the GPU
 void WaterMass::calculate_GPU() {
 	glUseProgram(GPU_program);
 	glDisable(GL_DEPTH_TEST);
-	//useFBO(water_height_tex, water_FBO, 0L);
-	useFBO(water_FBO, 0L , 0L);
-	//glUniform1i(glGetUniformLocation(GPU_program, "texUnit"), 15);
-	
+
+	useFBO(water_FBO, water_height_tex, 0L);
+	FBOstruct* tmp = water_FBO;
+	water_FBO = water_height_tex;
+	water_height_tex = tmp;
+
 	DrawModel(square_model, GPU_program, "in_Position", NULL, "in_TexCoord");
 	useFBO(0L, 0L, 0L);
-	//glFlush();
-	glEnable(GL_DEPTH_TEST);
-	//glClearColor(0.0, 0.0, 0.0, 0);
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glEnable(GL_DEPTH_TEST);
 	return;
 }
 
 
 
 
+void WaterMass::GPU_init()
+{
 
+	GPU_program = loadShaders("source/shaders/passthrough.vert",
+		"source/shaders/GPU_calc.frag");
+	glUseProgram(GPU_program);
+	glActiveTexture(GL_TEXTURE1);
+	water_FBO = initFBO(grid_size_x, grid_size_z, 0);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glUniform1i(glGetUniformLocation(GPU_program, "resolution"), resolution);
+	glUniform1i(glGetUniformLocation(GPU_program, "grid_x"), grid_size_x);
+	glUniform1i(glGetUniformLocation(GPU_program, "grid_z"), grid_size_z);
+
+	GLfloat square[] = {	-1,-1,0,
+							-1,1, 0,
+							1,1, 0,
+							1,-1, 0 };
+	GLfloat squareTexCoord[] = { 0, 0,
+								 0, 1,
+								 1, 1,
+								 1, 0 };
+	GLuint squareIndices[] = { 0, 1, 2, 0, 2, 3 };
+
+	square_model = LoadDataToModel(
+		square, NULL, squareTexCoord, NULL,
+		squareIndices, 4, 6);
+
+}
 
 
 //CPU CALCULATIONS¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
@@ -171,9 +169,7 @@ void WaterMass::calculate_GPU() {
 //CPU CALCULATIONS¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤
 
 void WaterMass::calculate_movements() {
-
-	//advect_velocities();
-	
+	//advect_velocities();	
 	HeightGrid height_copy{ *this };
 	for (int z = 0; z < grid_size_z; ++z) {
 		for (int x = 0; x < grid_size_x; x++)
@@ -191,7 +187,6 @@ void WaterMass::calculate_movements() {
 			}
 		}
 	}
-
 	delete this->height_array;
 	height_array = height_copy.height_array;
 	
@@ -223,10 +218,7 @@ float WaterMass::get_height_derivative(int x, int z) {
 		hbarx_minus * get_velocity(x, z, -1, 0)->x) + 
 		(hbarz_plus * get_velocity(x, z, 0, 1)->z -
 		hbarz_minus * get_velocity(x, z, 0, -1)->z)) * resolution;
-	
 	float friction_f = friction_force(dhdt);
-
-
 	return dhdt - friction_f * deltat;
 }
 
@@ -235,7 +227,6 @@ float WaterMass::friction_force(float vel) {
 	int mult = 1;
 	if (vel < 0)
 		mult = -1;
-
 	return  mult*friction_c * vel * vel / 2;
 }
 
@@ -248,7 +239,6 @@ float WaterMass::get_hbar_x(int x, int z, int x_offset, int z_offset)
 		x+x_offset < grid_size_x && x+x_offset >=0) {
 		hbar = at(x + x_offset, z)->x;
 	}
-	
 	return hbar;
 }
 
@@ -259,7 +249,6 @@ float WaterMass::get_hbar_z(int x, int z, int x_offset, int z_offset)
 		z + z_offset < grid_size_z && z + z_offset >= 0) {
 		hbar = at(x, z+z_offset)->x;
 	}
-
 	return hbar;
 }
 
@@ -334,8 +323,6 @@ bool WaterMass::is_reflective(vec4* here, vec4* here_plus) {
 	bool second_cond = here_plus->x <= ground_e && here_plus->y > (here->x + here->y);
 	return first_cond || second_cond;
 }
-
-
 
 
 //ADVECTION¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤

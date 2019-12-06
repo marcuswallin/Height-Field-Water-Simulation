@@ -14,7 +14,7 @@ TextureData ground_color_tex, skybox_tex, water_color_tex, grid_tex;
 bool calc_water = false;
 bool print_time = false;
 bool display_grid = false;
-bool calc_GPU = false;
+bool calc_GPU = true;
 
 
 //World world{};
@@ -87,10 +87,19 @@ void display(void)
 	printError("pre display");
 	keyboard_interaction();
 
-	if (calc_GPU) {
-		world.water.calculate_GPU();
+	int start_t = glutGet(GLUT_ELAPSED_TIME);
+	if (calc_water) {
+		if (calc_GPU) {
+			world.water.calculate_GPU();
+		}
+		else
+			world.water.calculate_movements();
 	}
-
+	int end_t = glutGet(GLUT_ELAPSED_TIME);
+	if (print_time) {
+		//	old_t++;
+		cout << "Calc time: " + to_string(end_t - start_t) << endl;
+	}
 
 	//set up matrices
 	cam_matrix = cameraPlacement();
@@ -105,15 +114,10 @@ void display(void)
 	
 	world.terrain.draw(cam_matrix, model_to_view);
 
-    int start_t = glutGet(GLUT_ELAPSED_TIME);
+   
 	world.water.draw(cam_matrix, time_diff, calc_water, display_grid, calc_GPU);
-	int end_t = glutGet(GLUT_ELAPSED_TIME);
 	
-	if (print_time) {
-	//	old_t++;
-		cout << "Calc time: " + to_string(end_t-start_t) << endl;
-	}
-		
+
 	old_t = start_t;
 	glutSwapBuffers();
 }
