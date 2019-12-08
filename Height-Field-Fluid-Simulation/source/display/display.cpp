@@ -48,7 +48,7 @@ void init(void)
 	m = LoadModelPlus((char*)"objects/teapot.obj");
 	skybox_model = LoadModelPlus((char*)"objects/skybox.obj");
 	
-	world = World("textures/fft-terrain.tga", 
+	world = World("textures/grid.tga",//"textures/fft-terrain.tga", 
 		start_pos.x - x_size/2, start_pos.x + x_size/2, start_pos.z - 30 - z_size/2, 
 		start_pos.z - 30 + z_size/2, 2 , water_resolution, time_diff);
 	
