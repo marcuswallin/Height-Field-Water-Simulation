@@ -1,21 +1,64 @@
-﻿  GL_utilities.c
-  loadobj.c
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\GL_utilities.h(12,12): fatal error C1083: Cannot open include file: 'glew.h': No such file or directory
-  LoadTGA.c
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\loadobj.h(12,12): fatal error C1083: Cannot open include file: 'glew.h': No such file or directory
-  VectorUtils3.c
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\LoadTGA.h(12,12): fatal error C1083: Cannot open include file: 'glew.h': No such file or directory
-  glew.c
-  MicroGlut.c
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(11,12): fatal error C1083: Cannot open include file: 'glew.h': No such file or directory
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(224,1): warning C4133: 'function': incompatible types - from 'char [9]' to 'LPCWSTR'
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(364,56): warning C4293: '<<': shift count negative or too big, undefined behavior
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(434,46): warning C4047: 'function': 'LPWORD' differs in levels of indirection from 'unsigned char (*)[2]'
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(434,46): warning C4024: 'ToAsciiEx': different types for formal and actual parameter 4
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(601,31): warning C4133: '=': incompatible types - from 'char [9]' to 'LPCWSTR'
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(604,6): warning C4013: 'main' undefined; assuming extern returning int
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(641,34): warning C4013: 'malloc' undefined; assuming extern returning int
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(724,9): warning C4013: 'free' undefined; assuming extern returning int
-  cameracontrol.c
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\Windows\MicroGlut.c(789,6): warning C4101: 'windowHDC': unreferenced local variable
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\cameracontrol.c(7,10): fatal error C1083: Cannot open include file: 'MicroGlut.h': No such file or directory
+﻿  display.cpp
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(72,49): warning C4190: 'SetVector' has C-linkage specified, but returns UDT 'vec3' which is incompatible with C
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(34): message : see declaration of 'vec3'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(74,32): warning C4190: 'VectorSub' has C-linkage specified, but returns UDT 'vec3' which is incompatible with C
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(34): message : see declaration of 'vec3'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(75,32): warning C4190: 'VectorAdd' has C-linkage specified, but returns UDT 'vec3' which is incompatible with C
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(34): message : see declaration of 'vec3'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(76,35): warning C4190: 'CrossProduct' has C-linkage specified, but returns UDT 'vec3' which is incompatible with C
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(34): message : see declaration of 'vec3'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(78,36): warning C4190: 'ScalarMult' has C-linkage specified, but returns UDT 'vec3' which is incompatible with C
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(34): message : see declaration of 'vec3'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(80,24): warning C4190: 'Normalize' has C-linkage specified, but returns UDT 'vec3' which is incompatible with C
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(34): message : see declaration of 'vec3'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(81,47): warning C4190: 'CalcNormalVector' has C-linkage specified, but returns UDT 'vec3' which is incompatible with C
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(34): message : see declaration of 'vec3'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(98,31): warning C4190: 'MultVec3' has C-linkage specified, but returns UDT 'vec3' which is incompatible with C
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(34): message : see declaration of 'vec3'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(99,31): warning C4190: 'MultVec4' has C-linkage specified, but returns UDT 'vec4' which is incompatible with C
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(47): message : see declaration of 'vec4'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(104,35): warning C4190: 'MultMat3Vec3' has C-linkage specified, but returns UDT 'vec3' which is incompatible with C
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(34): message : see declaration of 'vec3'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(137,25): warning C4190: 'vec4tovec3' has C-linkage specified, but returns UDT 'vec3' which is incompatible with C
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(34): message : see declaration of 'vec3'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(138,25): warning C4190: 'vec3tovec4' has C-linkage specified, but returns UDT 'vec4' which is incompatible with C
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(47): message : see declaration of 'vec4'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(182,29): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(182,22): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(182,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(188,29): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(188,22): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(188,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(194,31): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(194,24): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(194,17): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(252,36): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(252,29): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(252,22): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(252,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(258,36): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(258,29): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(258,22): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(258,15): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(264,38): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(264,31): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(264,24): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(264,17): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\cameracontrol.c(74,17): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\cameracontrol.c(91,40): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.h(47,25): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.h(50,30): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.h(51,24): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\display.cpp(40,37): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\display.cpp(50,20): warning C4244: 'argument': conversion from 'GLfloat' to 'int', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\display.cpp(49,68): warning C4244: 'argument': conversion from 'GLfloat' to 'int', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\display.cpp(49,39): warning C4244: 'argument': conversion from 'GLfloat' to 'int', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\display.cpp(49,15): warning C4244: 'argument': conversion from 'GLfloat' to 'int', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\display.cpp(52,66): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\display.cpp(23,7): warning C4101: 'mx': unreferenced local variable
+  Generating code
+  2 of 556 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    3 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  Height-Field-Water-Simulation.vcxproj -> C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\Release\Height-Field-Water-Simulation.exe

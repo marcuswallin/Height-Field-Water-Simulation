@@ -21,6 +21,7 @@ public:
 	
 private:
 	TextureData terrain_texture;
+	TextureData big_texture;
 	
 	//generate a 2D-array from the terrain_texture
 	void tex_to_vector();

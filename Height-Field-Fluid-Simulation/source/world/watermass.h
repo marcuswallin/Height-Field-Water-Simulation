@@ -8,7 +8,7 @@
 #include "terrain.h"
 #include <vector>
 #include <algorithm>
-
+#include "water_source.h"
 
 
 class WaterMass : public HeightGrid{
@@ -26,6 +26,7 @@ public:
 	void draw(const mat4& cam_mat, int time_diff, bool calc_water, bool show_grid);
 	void init_program(const mat4* proj_mat);
 	void calculate_movements();
+	void add_source();
 
 private:
 	void gen_water_from_terrain( Terrain&,
@@ -37,6 +38,8 @@ private:
 
 	//the shaders used by watermass
 	GLuint program;
+
+	WaterSource* sources;
 	
 	//coeffiecients for calculation
 	double friction_c = 0.1;

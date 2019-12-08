@@ -9,7 +9,7 @@ int time_diff;
 
 Model* m, * skybox_model;
 GLuint sky_program;
-TextureData ground_color_tex, skybox_tex, water_color_tex, grid_tex;
+TextureData ground_color_tex, gravel_tex, skybox_tex, water_color_tex, big_ground_tex, grid_tex;
 
 bool calc_water = false;
 bool print_time = false;
@@ -30,14 +30,12 @@ void init(void)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
 	//vec3 start_pos = SetVector(120, 10,140);
 	vec3 start_pos = SetVector(90, 20,150);
 
-
-	int x_size = 50;
-	int z_size = 50;
-	int water_resolution =2;
+	int x_size = 10;
+	int z_size = 10;
+	int water_resolution =1;
 
 	initControls(start_pos, 0, M_PI / 2);
 	
@@ -47,7 +45,7 @@ void init(void)
 	m = LoadModelPlus((char*)"objects/teapot.obj");
 	skybox_model = LoadModelPlus((char*)"objects/skybox.obj");
 	
-	world = World("textures/fft-terrain.tga", 
+	world = World("textures/smooth_lake_heightmap.tga", 
 		start_pos.x - x_size/2, start_pos.x + x_size/2, start_pos.z - 30 - z_size/2, 
 		start_pos.z - 30 + z_size/2, 2 , water_resolution, time_diff);
 	
@@ -66,6 +64,10 @@ void init(void)
 	LoadTGATexture("textures/grid_dots_clipped.tga", &grid_tex);
 	glActiveTexture(GL_TEXTURE3);
 	LoadTGATexture("textures/water512.tga", &water_color_tex);
+	glActiveTexture(GL_TEXTURE4);
+	LoadTGATexture("textures/maskros512.tga", &big_ground_tex);
+	glActiveTexture(GL_TEXTURE5);
+	LoadTGATexture("textures/rock_stones.tga", &gravel_tex);
 
 
 	world.terrain.init_program(projectionMatrix, worldToViewMatrix);
@@ -91,21 +93,17 @@ void display(void)
 	model_world = IdentityMatrix(); //change this
 	model_to_view = cam_matrix * model_world;
 
-	//cout << get_view_pos().x << " "  << get_view_pos().y << " " << get_view_pos().z << endl;
-
 	glUseProgram(sky_program);
 	draw_sky_box(&model_to_view);
 	glEnable(GL_DEPTH_TEST);
 
-	world.terrain.draw(cam_matrix, model_to_view);
-	//int start_t = glutGet(GLUT_ELAPSED_TIME);
+	world.terrain.draw(cam_matrix, model_world);
 
     int start_t = glutGet(GLUT_ELAPSED_TIME);
 	world.water.draw(cam_matrix, time_diff, calc_water, display_grid);
 	int end_t = glutGet(GLUT_ELAPSED_TIME);
 	
 	if (print_time) {
-	//	old_t++;
 		cout << "Calc time: " + to_string(end_t-start_t) << endl;
 	}
 		

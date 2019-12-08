@@ -11,6 +11,8 @@ WaterMass::WaterMass(Terrain& terrain,
 	x_offset(x_start), z_offset(z_start), resolution{resolution_}, deltat{ (float)timestep_length / 1000},
 	velocities{ (x_end - x_start)*resolution_ + 1,  (z_end - z_start) * 2 * resolution_ + 1, true }{
 
+	//maxmimum 100 watersources
+	sources = new WaterSource[100];
 	gen_water_from_terrain(terrain, x_start, x_end, z_start, z_end, offset, resolution);
 	model = GenerateTerrain(this, true, resolution);
 }
@@ -114,8 +116,7 @@ void WaterMass::calculate_movements() {
 
 			float dhdt = get_height_derivative(x, z);
 			float advection = get_advection_h(x, z);
-			if(x==50 && z == 170)
-				cout << dhdt/advection << endl;
+
 			h->x += (dhdt + advection)* deltat;
 			if (h->x < 0){
 				h->x = 0;
@@ -330,7 +331,10 @@ void WaterMass::advect_velocities() {
 
 
 
+void WaterMass::add_source() {
 
+	return;
+}
 
 
 

@@ -9,15 +9,15 @@ out vec3 exSurface;
 
 
 uniform mat4 projMatrix;
-uniform mat4 mdlMatrix;
+uniform mat4 mtwMatrix;
 uniform mat4 camMatrix;
 
 void main(void)
 {
-	exSurface = (mdlMatrix * vec4(inPosition, 1.0)).xyz;
-	gl_Position = projMatrix * mdlMatrix * vec4(inPosition, 1.0);
+	exSurface = (mtwMatrix * vec4(inPosition, 1.0)).xyz;
+	gl_Position = projMatrix * camMatrix* mtwMatrix * vec4(inPosition, 1.0);
 	//bad naming here
-	mat3 normalMatrix = mat3(mdlMatrix);
+	mat3 normalMatrix = mat3(camMatrix*mtwMatrix);
 	normalMatrix = inverse(normalMatrix);
 	normalMatrix = transpose(normalMatrix);
 	exNormal = normalMatrix * inNormal;

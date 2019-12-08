@@ -43,6 +43,9 @@
     <ClCompile Include="source\world\height_grid.cpp">
       <Filter>source\world</Filter>
     </ClCompile>
+    <ClCompile Include="source\world\water_source.cpp">
+      <Filter>source\world</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="MicroGlut">
@@ -125,6 +128,9 @@
       <Filter>source\world</Filter>
     </ClInclude>
     <ClInclude Include="source\world\height_grid.h">
+      <Filter>source\world</Filter>
+    </ClInclude>
+    <ClInclude Include="source\world\water_source.h">
       <Filter>source\world</Filter>
     </ClInclude>
   </ItemGroup>

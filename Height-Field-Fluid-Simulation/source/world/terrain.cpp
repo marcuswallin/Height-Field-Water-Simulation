@@ -22,12 +22,16 @@ void Terrain::init_program(const mat4& proj_mat, const mat4& wtv_mat) {
 
 }
 
-void Terrain::draw(const mat4& cam_mat, const mat4& mtv_mat) {
+void Terrain::draw(const mat4& cam_mat, const mat4& mtw_mat) {
 	glUseProgram(program);
 	glUniformMatrix4fv(glGetUniformLocation(program, "camMatrix"), 1, GL_TRUE, cam_mat.m);
-	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, mtv_mat.m);
+	glUniformMatrix4fv(glGetUniformLocation(program, "mtwMatrix"), 1, GL_TRUE, mtw_mat.m);
 
 	glUniform1i(glGetUniformLocation(program, "tex"), 0);
+	glUniform1i(glGetUniformLocation(program, "bigTex"), 4);
+	glUniform1i(glGetUniformLocation(program, "gravelTex"), 5);
+
+
 	//DrawModel(m, program, "inPosition", "inNormal", "inTexCoord");
 	DrawModel(model, program, "inPosition", "inNormal", "inTexCoord");
 
