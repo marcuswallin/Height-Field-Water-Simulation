@@ -26,11 +26,11 @@ public:
 	void draw(const mat4& cam_mat, int time_diff, bool calc_water, bool show_grid);
 	void init_program(const mat4* proj_mat);
 	void calculate_movements();
-	void add_source();
+	void add_source(const vec3& pos);
+	void gen_water_from_terrain(Terrain&,
+		int x_start, int x_end, int z_start, int z_end, float offset, int resolution);
 
 private:
-	void gen_water_from_terrain( Terrain&,
-		int x_start, int x_end, int z_start, int z_end, float offset, int resolution);
 
 	//the texture that the height was read from
 	GLuint water_height_tex;
@@ -40,6 +40,8 @@ private:
 	GLuint program;
 
 	WaterSource* sources;
+	int source_index{ 0 };
+	void set_source_height();
 	
 	//coeffiecients for calculation
 	double friction_c = 0.1;

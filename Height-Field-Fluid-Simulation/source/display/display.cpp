@@ -31,11 +31,11 @@ void init(void)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//vec3 start_pos = SetVector(120, 10,140);
-	vec3 start_pos = SetVector(90, 20,150);
+	vec3 start_pos = SetVector(50, 20,190);
 
-	int x_size = 10;
-	int z_size = 10;
-	int water_resolution =1;
+	int x_size = 50;
+	int z_size = 50;
+	int water_resolution =2;
 
 	initControls(start_pos, 0, M_PI / 2);
 	
@@ -45,9 +45,9 @@ void init(void)
 	m = LoadModelPlus((char*)"objects/teapot.obj");
 	skybox_model = LoadModelPlus((char*)"objects/skybox.obj");
 	
-	world = World("textures/smooth_lake_heightmap.tga", 
+	world = World("textures/fft-terrain.tga", 
 		start_pos.x - x_size/2, start_pos.x + x_size/2, start_pos.z - 30 - z_size/2, 
-		start_pos.z - 30 + z_size/2, 2 , water_resolution, time_diff);
+		start_pos.z - 30 + z_size/2, 0 , water_resolution, time_diff);
 	
 	mat4 projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 250.0);
 	mat4 worldToViewMatrix = cameraPlacement();
@@ -141,6 +141,15 @@ void keyboard_interaction() {
 		print_time = !print_time;
 		key_is_down = true;
 	}
+	if (glutKeyIsDown('r') && !key_is_down)
+	{
+
+		mat4 projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 250.0);
+		world.water = WaterMass{ world.terrain, 40,150,40,150,1,2,time_diff };
+		world.water.init_program(&projectionMatrix);
+
+		key_is_down = true;
+	}
 	if(glutKeyIsDown('g') && !key_is_down)
 	{
 		if (display_grid)
@@ -151,7 +160,13 @@ void keyboard_interaction() {
 		display_grid = !display_grid;
 		key_is_down = true;
 	}
-	if(!glutKeyIsDown('p') && !glutKeyIsDown('t') && !glutKeyIsDown('g') && key_is_down)
+	if (glutKeyIsDown('e') && !key_is_down)
+	{
+		world.water.add_source(get_view_pos());
+		key_is_down = true;
+	}
+	if(	!glutKeyIsDown('p') && !glutKeyIsDown('t') && !glutKeyIsDown('r') &&
+		!glutKeyIsDown('g') && !glutKeyIsDown('e') && key_is_down)
 		key_is_down = false;
 }
 

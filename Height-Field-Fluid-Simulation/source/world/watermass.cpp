@@ -25,7 +25,10 @@ void WaterMass::draw(const mat4& cam_mat, int time_diff,
 	glUniformMatrix4fv(glGetUniformLocation(program, "camMatrix"), 1, GL_TRUE, cam_mat.m);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, model_world.m);
 
-	if (calc_water) calculate_movements();
+	if (calc_water) {
+		set_source_height();
+		calculate_movements();
+	}
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, grid_size_x, grid_size_z, 0,
 		GL_RGBA, GL_FLOAT, &height_array[0].x);
@@ -35,6 +38,7 @@ void WaterMass::draw(const mat4& cam_mat, int time_diff,
 		glUniform1i(glGetUniformLocation(program, "tex"), 2);
 	else
 		glUniform1i(glGetUniformLocation(program, "tex"), 3);
+	glUniform1i(glGetUniformLocation(program, "show_grid"), (int)show_grid);
 
 	DrawModel(model, program, "inPosition", NULL, "inTexCoord");
 
@@ -331,9 +335,21 @@ void WaterMass::advect_velocities() {
 
 
 
-void WaterMass::add_source() {
-
+void WaterMass::add_source(const vec3& pos) {
+	if (source_index >= 100)
+		return;
+	sources[source_index] = WaterSource{ pos };
+	source_index++;
+	cout << "added water source at: " + to_string(pos.x) + " " +
+		to_string(pos.y) + " " + to_string(pos.z) << endl;
 	return;
+}
+
+void WaterMass::set_source_height() {
+	for (int i = 0; i < source_index; ++i) {
+		at((int)(sources[i].position.x - x_offset) * resolution,
+			(int)(sources[i].position.z - z_offset) * resolution)->x = sources[i].get_height();
+	}
 }
 
 

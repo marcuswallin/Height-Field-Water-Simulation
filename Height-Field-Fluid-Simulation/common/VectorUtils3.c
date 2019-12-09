@@ -206,10 +206,9 @@ char transposed = 0;
 
 	vec3 Normalize(vec3 a)
 	{
-		GLfloat norm;
-		vec3 result;
+		vec3 result = SetVector(0.0f, 0.0f, 0.0f);
 
-		norm = (GLfloat)sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
+		GLfloat norm = (GLfloat)sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
 		result.x = a.x / norm;
 		result.y = a.y / norm;
 		result.z = a.z / norm;

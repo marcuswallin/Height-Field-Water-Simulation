@@ -25,14 +25,13 @@ void main(void)
 	diffuse = clamp(diffuse, 0, 1);
 	shade = diffuse;
 
-	vec4 ground_c = vec4(0);
-	if(exSurface.y < 1.0)
-		ground_c = vec4(shade, shade, shade, 1.0) * texture(gravelTex, texCoord);
-	else if(exSurface.y > 1.0)
-		ground_c = vec4(shade, shade, shade, 1.0) * texture(tex, texCoord);
-	
-	vec4 big_ground = vec4(shade, shade, shade, 1.0) * vec4(0,0.7,0,1);//big_tex_color/2;
-	ground_c.a = 1;
-    outColor = ground_c;// + big_ground;
 
+	vec4 gravel = vec4(shade, shade, shade, 1.0) * texture(gravelTex, texCoord);
+	float gravel_mult = max(0, (1-0.1*exSurface.y));
+	vec4 grass = vec4(shade, shade, shade, 1.0) * texture(tex, texCoord);
+	float grass_mult = min(1, 0.1*exSurface.y);
+	//vec4 big_ground = vec4(shade, shade, shade, 1.0) * vec4(0,0.7,0,1);//big_tex_color/2;
+	
+    outColor = grass_mult*grass+gravel_mult*gravel;
+	outColor.a = 1;
 }
