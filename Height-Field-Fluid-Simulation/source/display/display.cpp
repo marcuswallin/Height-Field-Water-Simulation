@@ -14,6 +14,8 @@ TextureData ground_color_tex, gravel_tex, skybox_tex, water_color_tex, big_groun
 bool calc_water = false;
 bool print_time = false;
 bool display_grid = false;
+bool show_depth = false;
+
 
 //World world{};
 World world;
@@ -31,11 +33,11 @@ void init(void)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//vec3 start_pos = SetVector(120, 10,140);
-	vec3 start_pos = SetVector(50, 20,190);
+	vec3 start_pos = SetVector(120, 20,155);
 
-	int x_size = 50;
-	int z_size = 50;
-	int water_resolution =2;
+	int x_size = 200;
+	int z_size = 200;
+	int water_resolution =1;
 
 	initControls(start_pos, 0, M_PI / 2);
 	
@@ -45,11 +47,11 @@ void init(void)
 	m = LoadModelPlus((char*)"objects/teapot.obj");
 	skybox_model = LoadModelPlus((char*)"objects/skybox.obj");
 	
-	world = World("textures/fft-terrain.tga", 
+	world = World("textures/cloud4.tga", 
 		start_pos.x - x_size/2, start_pos.x + x_size/2, start_pos.z - 30 - z_size/2, 
 		start_pos.z - 30 + z_size/2, 0 , water_resolution, time_diff);
 	
-	mat4 projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 250.0);
+	mat4 projectionMatrix = frustum(-0.13, 0.13, -0.1, 0.1, 0.2, 300.0);
 	mat4 worldToViewMatrix = cameraPlacement();
 
 	glUseProgram(sky_program);
@@ -100,7 +102,7 @@ void display(void)
 	world.terrain.draw(cam_matrix, model_world);
 
     int start_t = glutGet(GLUT_ELAPSED_TIME);
-	world.water.draw(cam_matrix, time_diff, calc_water, display_grid);
+	world.water.draw(cam_matrix, time_diff, calc_water, display_grid, show_depth);
 	int end_t = glutGet(GLUT_ELAPSED_TIME);
 	
 	if (print_time) {
@@ -144,7 +146,7 @@ void keyboard_interaction() {
 	if (glutKeyIsDown('r') && !key_is_down)
 	{
 
-		mat4 projectionMatrix = frustum(-0.1, 0.1, -0.1, 0.1, 0.2, 250.0);
+		mat4 projectionMatrix = frustum(-0.13, 0.13, -0.1, 0.1, 0.2, 300.0);
 		world.water = WaterMass{ world.terrain, 40,150,40,150,1,2,time_diff };
 		world.water.init_program(&projectionMatrix);
 
@@ -162,11 +164,22 @@ void keyboard_interaction() {
 	}
 	if (glutKeyIsDown('e') && !key_is_down)
 	{
-		world.water.add_source(get_view_pos());
+		world.water.add_source(get_view_pos(), false);
 		key_is_down = true;
 	}
-	if(	!glutKeyIsDown('p') && !glutKeyIsDown('t') && !glutKeyIsDown('r') &&
-		!glutKeyIsDown('g') && !glutKeyIsDown('e') && key_is_down)
+	if (glutKeyIsDown('q') && !key_is_down)
+	{
+		world.water.add_source(get_view_pos(), true);
+		key_is_down = true;
+	}
+	if (glutKeyIsDown('c') && !key_is_down)
+	{
+		show_depth = !show_depth;
+		key_is_down = true;
+	}
+	if(	!glutKeyIsDown('p') && !glutKeyIsDown('t') && 
+		!glutKeyIsDown('r') && !glutKeyIsDown('c') &&
+		!glutKeyIsDown('g') && !glutKeyIsDown('e') && !glutKeyIsDown('q') && key_is_down)
 		key_is_down = false;
 }
 

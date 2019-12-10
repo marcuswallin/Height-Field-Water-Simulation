@@ -1,11 +1,14 @@
 
 #include "water_source.h"
 
-WaterSource::WaterSource(const vec3& pos) : position{ pos }, height{ 2 } {
+WaterSource::WaterSource(const vec3& pos, bool _is_drain) : 
+	position{ pos }, height{ 2 }, is_drain{ _is_drain }{
 
 }
 
 GLfloat WaterSource::get_height() {
+	if (is_drain)
+		return 0;
 
 	++count;
 	if (count > 10000)

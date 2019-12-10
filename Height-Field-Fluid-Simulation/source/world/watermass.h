@@ -23,10 +23,10 @@ public:
 	int z_offset;
 
 	 
-	void draw(const mat4& cam_mat, int time_diff, bool calc_water, bool show_grid);
+	void draw(const mat4& cam_mat, int time_diff, bool calc_water, bool show_grid, bool show_depth);
 	void init_program(const mat4* proj_mat);
 	void calculate_movements();
-	void add_source(const vec3& pos);
+	void add_source(const vec3& pos, bool is_drain);
 	void gen_water_from_terrain(Terrain&,
 		int x_start, int x_end, int z_start, int z_end, float offset, int resolution);
 

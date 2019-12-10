@@ -18,7 +18,7 @@ WaterMass::WaterMass(Terrain& terrain,
 }
 
 void WaterMass::draw(const mat4& cam_mat, int time_diff, 
-	bool calc_water, bool show_grid){
+	bool calc_water, bool show_grid, bool show_depth){
 	glUseProgram(program);
 	mat4 model_world = T(x_offset, 0, z_offset); //change this
 	//model_to_view = cam_matrix * model_world;
@@ -39,6 +39,8 @@ void WaterMass::draw(const mat4& cam_mat, int time_diff,
 	else
 		glUniform1i(glGetUniformLocation(program, "tex"), 3);
 	glUniform1i(glGetUniformLocation(program, "show_grid"), (int)show_grid);
+	glUniform1i(glGetUniformLocation(program, "show_depth"), (int)show_depth);
+
 
 	DrawModel(model, program, "inPosition", NULL, "inTexCoord");
 
@@ -335,10 +337,10 @@ void WaterMass::advect_velocities() {
 
 
 
-void WaterMass::add_source(const vec3& pos) {
+void WaterMass::add_source(const vec3& pos, bool is_drain) {
 	if (source_index >= 100)
 		return;
-	sources[source_index] = WaterSource{ pos };
+	sources[source_index] = WaterSource{ pos, is_drain };
 	source_index++;
 	cout << "added water source at: " + to_string(pos.x) + " " +
 		to_string(pos.y) + " " + to_string(pos.z) << endl;

@@ -42,6 +42,6 @@ void Terrain::tex_to_vector() {
 	for (int z = 0; z < grid_size_z; z++)
 		for (int x = 0; x < grid_size_x; x++){
 			//this shoulc change
-			at(x,z)->x =  0.1 * terrain_texture.imageData[(x + z * terrain_texture.width) * (terrain_texture.bpp / 8)];
+			at(x,z)->x = z *20.0 / grid_size_z + 0.03 * terrain_texture.imageData[(x + z * terrain_texture.width) * (terrain_texture.bpp / 8)];
 		}
 }

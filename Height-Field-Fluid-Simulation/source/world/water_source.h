@@ -5,12 +5,14 @@
 class WaterSource {
 public:
 	WaterSource() = default;
-	WaterSource(const vec3& pos);
+	WaterSource(const vec3& pos, bool is_drain);
 	vec3 position;
 	GLfloat get_height();
+
 private:
 	int count{ 0 };
 	GLfloat height;
+	bool is_drain;
 
 };
 
