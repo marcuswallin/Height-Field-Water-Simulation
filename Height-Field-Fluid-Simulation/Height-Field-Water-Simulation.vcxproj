@@ -109,6 +109,8 @@
     <None Include="source\shaders\water.frag" />
     <None Include="source\shaders\water.geom" />
     <None Include="source\shaders\water.vert" />
+    <None Include="source\shaders\wells.frag" />
+    <None Include="source\shaders\wells.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common\GL_utilities.h" />

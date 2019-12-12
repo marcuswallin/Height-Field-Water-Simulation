@@ -3,6 +3,7 @@
 #include <iostream>
 
 using namespace std;
+//#define MAX_WELLS 20
 
 //velocities initiated as staggered grid
 WaterMass::WaterMass(Terrain& terrain,
@@ -42,6 +43,8 @@ void WaterMass::draw(const mat4& cam_mat, int time_diff,
 	glUniform1i(glGetUniformLocation(program, "show_depth"), (int)show_depth);
 
 
+	draw_sources(cam_mat);
+	glUseProgram(program);
 	DrawModel(model, program, "inPosition", NULL, "inTexCoord");
 
 }
@@ -72,6 +75,14 @@ void WaterMass::init_program(const mat4* proj_mat) {
 	glUniformMatrix4fv(glGetUniformLocation(program, "projMatrix"), 1, GL_TRUE, proj_mat->m);
 
 	glUniform1i(glGetUniformLocation(program, "tex"), 2);
+
+	//WELLS---------------------------------------------------------------
+
+	well_program = loadShaders("source/shaders/wells.vert", "source/shaders/wells.frag");
+	well_model = LoadModelPlus((char*)"objects/force_generator.obj");
+	glUseProgram(well_program);
+	glUniformMatrix4fv(glGetUniformLocation(well_program, "projMatrix"), 1, GL_TRUE, proj_mat->m);
+	glUseProgram(program);
 
 }
 
@@ -340,11 +351,31 @@ void WaterMass::advect_velocities() {
 void WaterMass::add_source(const vec3& pos, bool is_drain) {
 	if (source_index >= 100)
 		return;
-	sources[source_index] = WaterSource{ pos, is_drain };
+	vec3 pos_n = pos;
+	float height_at_pos = at((pos.x - x_offset) * resolution,
+		(pos.z - z_offset) * resolution)->y;
+	pos_n.y = height_at_pos;
+	sources[source_index] = WaterSource{ pos_n, is_drain };
 	source_index++;
-	cout << "added water source at: " + to_string(pos.x) + " " +
-		to_string(pos.y) + " " + to_string(pos.z) << endl;
+	cout << "added water source at: " + to_string(pos_n.x) + " " +
+		to_string(pos_n.y) + " " + to_string(pos_n.z) << endl;
 	return;
+}
+
+void WaterMass::draw_sources(const mat4& cam_mat) {
+	glUseProgram(well_program);
+	mat4 R = Rx(-M_PI / 2);
+	mat4 Sc = S(0.5, 0.5, 0.5);
+	for (int i = 0; i < source_index; ++i)
+	{
+		WaterSource curr = sources[i];
+
+		mat4 tot = cam_mat * T((int)curr.position.x, curr.position.y-0.5, (int)curr.position.z) * R * Sc;
+		glUniformMatrix4fv(glGetUniformLocation(well_program, "mdlMatrix"), 1, GL_TRUE, tot.m);
+		glUniformMatrix4fv(glGetUniformLocation(well_program, "camMatrix"), 1, GL_TRUE, cam_mat.m);
+
+		DrawModel(well_model, well_program, "inPosition", "inNormal", "inTexCoord");
+	}
 }
 
 void WaterMass::set_source_height() {

@@ -92,6 +92,12 @@
     <None Include="source\shaders\water.geom">
       <Filter>shaders</Filter>
     </None>
+    <None Include="source\shaders\wells.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="source\shaders\wells.vert">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common\GL_utilities.h">

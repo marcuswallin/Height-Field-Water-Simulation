@@ -29,7 +29,7 @@ public:
 	void add_source(const vec3& pos, bool is_drain);
 	void gen_water_from_terrain(Terrain&,
 		int x_start, int x_end, int z_start, int z_end, float offset, int resolution);
-
+	void draw_sources(const mat4& cam_mat);
 private:
 
 	//the texture that the height was read from
@@ -38,6 +38,10 @@ private:
 
 	//the shaders used by watermass
 	GLuint program;
+	GLuint	well_program;
+	Model* well_model;
+	int nr_wells = 0;
+
 
 	WaterSource* sources;
 	int source_index{ 0 };

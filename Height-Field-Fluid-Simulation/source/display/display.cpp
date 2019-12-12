@@ -15,9 +15,7 @@ bool calc_water = false;
 bool print_time = false;
 bool display_grid = false;
 bool show_depth = false;
-
-
-//World world{};
+vec3 *wells;
 World world;
 
 void init(void)
@@ -33,7 +31,7 @@ void init(void)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//vec3 start_pos = SetVector(120, 10,140);
-	vec3 start_pos = SetVector(120, 20,155);
+	vec3 start_pos = SetVector(120, 30,155);
 
 	int x_size = 200;
 	int z_size = 200;
@@ -46,6 +44,8 @@ void init(void)
 	// Upload geometry to the GPU:
 	m = LoadModelPlus((char*)"objects/teapot.obj");
 	skybox_model = LoadModelPlus((char*)"objects/skybox.obj");
+
+
 	
 	world = World("textures/cloud4.tga", 
 		start_pos.x - x_size/2, start_pos.x + x_size/2, start_pos.z - 30 - z_size/2, 
@@ -56,6 +56,7 @@ void init(void)
 
 	glUseProgram(sky_program);
 	glUniformMatrix4fv(glGetUniformLocation(sky_program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
+
 
 	//textures-------------------------------------------------------
 	glActiveTexture(GL_TEXTURE0);
@@ -74,7 +75,7 @@ void init(void)
 
 	world.terrain.init_program(projectionMatrix, worldToViewMatrix);
 	world.water.init_program(&projectionMatrix);
-	
+
 
 	printError("init finished");
 }
@@ -108,7 +109,8 @@ void display(void)
 	if (print_time) {
 		cout << "Calc time: " + to_string(end_t-start_t) << endl;
 	}
-		
+    
+
 	old_t = start_t;
 	glutSwapBuffers();
 }
@@ -182,7 +184,6 @@ void keyboard_interaction() {
 		!glutKeyIsDown('g') && !glutKeyIsDown('e') && !glutKeyIsDown('q') && key_is_down)
 		key_is_down = false;
 }
-
 
 
 
