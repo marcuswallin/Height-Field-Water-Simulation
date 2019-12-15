@@ -1,4 +1,4 @@
-﻿  watermass.cpp
+﻿  display.cpp
 C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(72,49): warning C4190: 'SetVector' has C-linkage specified, but returns UDT 'vec3' which is incompatible with C
 C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(34): message : see declaration of 'vec3'
 C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(74,32): warning C4190: 'VectorSub' has C-linkage specified, but returns UDT 'vec3' which is incompatible with C
@@ -44,23 +44,19 @@ C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height
 C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(264,31): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
 C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(264,24): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
 C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\common\VectorUtils3.h(264,17): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\cameracontrol.c(74,17): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\cameracontrol.c(91,40): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
 C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.h(53,25): warning C4305: 'initializing': truncation from 'double' to 'float'
 C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.h(56,30): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.h(57,24): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.cpp(24,36): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.cpp(24,23): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.cpp(159,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.cpp(188,38): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.cpp(252,49): warning C4244: '+=': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.cpp(266,49): warning C4244: '+=': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.cpp(309,87): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.cpp(310,87): warning C4244: '-=': conversion from 'double' to 'float', possible loss of data
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.cpp(356,22): warning C4244: 'argument': conversion from 'GLfloat' to 'int', possible loss of data
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.cpp(355,46): warning C4244: 'argument': conversion from 'GLfloat' to 'int', possible loss of data
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.cpp(367,23): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.cpp(373,87): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.cpp(373,63): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\world\watermass.cpp(373,44): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\display.cpp(40,37): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\display.cpp(52,20): warning C4244: 'argument': conversion from 'GLfloat' to 'int', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\display.cpp(51,68): warning C4244: 'argument': conversion from 'GLfloat' to 'int', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\display.cpp(51,39): warning C4244: 'argument': conversion from 'GLfloat' to 'int', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\display.cpp(51,15): warning C4244: 'argument': conversion from 'GLfloat' to 'int', possible loss of data
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\display.cpp(54,68): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\display.cpp(23,7): warning C4101: 'mx': unreferenced local variable
+C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\display.cpp(153,69): warning C4305: 'argument': truncation from 'double' to 'float'
   Generating code
   2 of 584 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation

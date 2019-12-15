@@ -9,7 +9,7 @@ int time_diff;
 
 Model* m, * skybox_model;
 GLuint sky_program;
-TextureData ground_color_tex, gravel_tex, skybox_tex, water_color_tex, big_ground_tex, grid_tex;
+TextureData ground_color_tex, sand_tex, gravel_tex, skybox_tex, water_color_tex, big_ground_tex, grid_tex;
 
 bool calc_water = false;
 bool print_time = false;
@@ -47,7 +47,7 @@ void init(void)
 
 
 	
-	world = World("textures/cloud4.tga", 
+	world = World("textures/cloud5.tga", 
 		start_pos.x - x_size/2, start_pos.x + x_size/2, start_pos.z - 30 - z_size/2, 
 		start_pos.z - 30 + z_size/2, 0 , water_resolution, time_diff);
 	
@@ -68,9 +68,11 @@ void init(void)
 	glActiveTexture(GL_TEXTURE3);
 	LoadTGATexture("textures/water512.tga", &water_color_tex);
 	glActiveTexture(GL_TEXTURE4);
-	LoadTGATexture("textures/maskros512.tga", &big_ground_tex);
+	LoadTGATexture("textures/rgb_cloud6.tga", &big_ground_tex);
 	glActiveTexture(GL_TEXTURE5);
 	LoadTGATexture("textures/rock_stones.tga", &gravel_tex);
+	glActiveTexture(GL_TEXTURE6);
+	LoadTGATexture("textures/sand.tga", &sand_tex);
 
 
 	world.terrain.init_program(projectionMatrix, worldToViewMatrix);
@@ -149,6 +151,7 @@ void keyboard_interaction() {
 	{
 
 		mat4 projectionMatrix = frustum(-0.13, 0.13, -0.1, 0.1, 0.2, 300.0);
+		delete world.water.height_array;
 		world.water = WaterMass{ world.terrain, 40,150,40,150,1,2,time_diff };
 		world.water.init_program(&projectionMatrix);
 

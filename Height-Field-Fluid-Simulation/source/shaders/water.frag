@@ -2,9 +2,10 @@
 
 out vec4 outColor;
 uniform sampler2D waterHeight;
+uniform mat4 projMatrix;
 uniform sampler2D tex;
 uniform mat4 camMatrix;
-
+uniform mat4 mdlMatrix;
 in vec3 exSurfaceG;
 uniform int show_grid;
 uniform int show_depth;
@@ -41,13 +42,23 @@ void main(void)
 
 	shade = diffuse + specular;
 	// vec4(water_heightG);
-	vec4 color = vec4(shade, shade, shade, 1.0)*vec4(0.2,0.45,0.7,1);//texture(tex, texCoordG);
+	vec4 color = vec4(shade, shade, shade, 1.0)*vec4(0.1,0.2,0.4,1);//texture(tex, texCoordG);
 	//temporary workaround
 
+	//SKRÄP!!!!!
 	float v_dot = dot(normalize(exNormalG), v);
 	float water_h = clamp(water_heightG, 1, 5);
-	color.a = clamp((1-v_dot)*(1+water_heightG/4), 0.15*water_h, 0.99);
-    outColor = color;
+	mat3 normalMatrix = mat3(camMatrix * mdlMatrix);
+	normalMatrix = inverse(normalMatrix);
+	normalMatrix = transpose(normalMatrix);
+	vec3 y = normalize(normalMatrix*vec3(0,1.0,0));
+	//color.a = clamp((1-v_dot)*(1+water_heightG/2), 0.15*water_h, 0.99);
+	
+	float cs = clamp(water_heightG/(dot(y, v)), 0.01, 1.0);
+    color.a = clamp(cs, 0.15, 0.90);
+
+
+	outColor = color;
 	if (show_grid == 1)
 	{
 		outColor = vec4(shade, shade, shade, 1.0)*texture(tex, texCoordG);
