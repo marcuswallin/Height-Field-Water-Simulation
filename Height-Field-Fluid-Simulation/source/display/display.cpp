@@ -72,7 +72,7 @@ void init(void)
 	glActiveTexture(GL_TEXTURE5);
 	LoadTGATexture("textures/rock_stones.tga", &gravel_tex);
 	glActiveTexture(GL_TEXTURE6);
-	LoadTGATexture("textures/sand.tga", &sand_tex);
+	LoadTGATexture("textures/sand_2.tga", &sand_tex);
 
 
 	world.terrain.init_program(projectionMatrix, worldToViewMatrix);

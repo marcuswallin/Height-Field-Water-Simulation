@@ -141,9 +141,8 @@ void WaterMass::calculate_movements() {
 		}
 	}
 
-	delete this->height_array;
+	delete [] this->height_array;
 	height_array = height_copy.height_array;
-	
 	velocity_integration();
 }
 

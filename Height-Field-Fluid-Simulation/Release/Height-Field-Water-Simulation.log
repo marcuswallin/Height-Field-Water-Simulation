@@ -58,7 +58,7 @@ C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height
 C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\display.cpp(23,7): warning C4101: 'mx': unreferenced local variable
 C:\Users\Marcus\Documents\Skola\Datorgrafik\Height-Field-Water-Simulation\Height-Field-Fluid-Simulation\source\display\display.cpp(153,69): warning C4305: 'argument': truncation from 'double' to 'float'
   Generating code
-  2 of 584 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
+  1 of 584 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     3 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
