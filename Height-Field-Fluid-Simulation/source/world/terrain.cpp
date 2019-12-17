@@ -1,5 +1,4 @@
 #pragma once
-//#include "MicroGlut.h"
 #include "terrain.h"
 
 using namespace std;
@@ -32,18 +31,13 @@ void Terrain::draw(const mat4& cam_mat, const mat4& mtw_mat) {
 	glUniform1i(glGetUniformLocation(program, "gravelTex"), 5);
 	glUniform1i(glGetUniformLocation(program, "sandTex"), 6);
 
-
-
-	//DrawModel(m, program, "inPosition", "inNormal", "inTexCoord");
 	DrawModel(model, program, "inPosition", "inNormal", "inTexCoord");
 
 }
 void Terrain::tex_to_vector() {
-
 	height_array = new vec4[grid_size_x * grid_size_z];
 	for (int z = 0; z < grid_size_z; z++)
 		for (int x = 0; x < grid_size_x; x++){
-			//this shoulc change
 			at(x,z)->x = z *20.0 / grid_size_z + 0.05 * terrain_texture.imageData[(x + z * terrain_texture.width) * (terrain_texture.bpp / 8)];
 		}
 }

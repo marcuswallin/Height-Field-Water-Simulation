@@ -71,12 +71,6 @@
     <None Include="source\shaders\skybox.vert">
       <Filter>shaders</Filter>
     </None>
-    <None Include="source\shaders\terrainphong.frag">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="source\shaders\terrainphong.vert">
-      <Filter>shaders</Filter>
-    </None>
     <None Include="source\shaders\terrain.frag">
       <Filter>shaders</Filter>
     </None>

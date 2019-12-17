@@ -22,7 +22,6 @@ void main(void)
 
 	vec3 light = vec3(-1,1,-1);
     vec3 lightView;
-	//float intensity = 0.5;
 
 	//diffuse
 	mat3 lightMatrix = mat3(camMatrix);

@@ -3,7 +3,6 @@
 #include <iostream>
 
 using namespace std;
-//#define MAX_WELLS 20
 
 //velocities initiated as staggered grid
 WaterMass::WaterMass(Terrain& terrain,
@@ -21,8 +20,7 @@ WaterMass::WaterMass(Terrain& terrain,
 void WaterMass::draw(const mat4& cam_mat, int time_diff, 
 	bool calc_water, bool show_grid, bool show_depth){
 	glUseProgram(program);
-	mat4 model_world = T(x_offset, 0, z_offset); //change this
-	//model_to_view = cam_matrix * model_world;
+	mat4 model_world = T(x_offset, 0, z_offset); 
 	glUniformMatrix4fv(glGetUniformLocation(program, "camMatrix"), 1, GL_TRUE, cam_mat.m);
 	glUniformMatrix4fv(glGetUniformLocation(program, "mdlMatrix"), 1, GL_TRUE, model_world.m);
 
@@ -34,7 +32,7 @@ void WaterMass::draw(const mat4& cam_mat, int time_diff,
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, grid_size_x, grid_size_z, 0,
 		GL_RGBA, GL_FLOAT, &height_array[0].x);
 	glUniform1i(glGetUniformLocation(program, "waterHeight"), 15);
-	//glActiveTexture(GL_TEXTURE2);
+
 	if(show_grid)
 		glUniform1i(glGetUniformLocation(program, "tex"), 2);
 	else
@@ -63,8 +61,6 @@ void WaterMass::init_program(const mat4* proj_mat) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-
-	//change this part later
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, grid_size_x, grid_size_z, 0,
 		GL_RGBA, GL_FLOAT, &height_array[0].x);//&smoke_array[0].pos.x);
 	//water_program should be coitained by watermass
@@ -114,7 +110,7 @@ void WaterMass::gen_water_from_terrain(Terrain& terrain,
 				x / resolution + x_start, 
 				z / resolution + z_start, 
 				off_x, off_z);
-			at(x, z)->y = height; //t_height->x;
+			at(x, z)->y = height;
 	
 		}
 }
@@ -160,7 +156,6 @@ float WaterMass::get_height_derivative(int x, int z) {
 	float h_adj = max((float)0,
 		(hbarx_plus + hbarx_minus + hbarz_plus + hbarz_minus) / 4 - h_avg_max);
 
-	//does low difference to height increase
 	hbarx_plus -= h_adj;
 	hbarx_minus -= h_adj;
 	hbarz_plus -= h_adj;
@@ -187,7 +182,7 @@ float WaterMass::friction_force(float vel) {
 	return  mult*friction_c * vel * vel / 2;
 }
 
-//test eq.5 
+//test eq.5 from Muller article
 float WaterMass::get_hbar_x(int x, int z, int x_offset, int z_offset)
 {   
 	
@@ -231,7 +226,7 @@ vec4* WaterMass::get_velocity(int x, int z, int x_offset, int z_offset)
 	return velocities.at(x_vel, z_vel);
 }
 
-
+//integrates all velocity values with euler integration
 void WaterMass::velocity_integration(void) {
 	for (int z = 0; z < grid_size_z; ++z) {
 		for (int x = 0; x < grid_size_x; x++)
@@ -249,7 +244,7 @@ void WaterMass::velocity_integration(void) {
 			else {
 				v_xplus->x += -(gravity * resolution ) * deltat *
 					((h_xplus->x + h_xplus->y) - (h->x + h->y));
-				//v_xplus->x = min(v_xplus->x, a_vel * 1 / deltat);
+
 				if (v_xplus->x > a_vel * 1 / deltat) {
 					v_xplus->x = a_vel * 1 / deltat;
 				}
@@ -263,7 +258,6 @@ void WaterMass::velocity_integration(void) {
 			else {
 				v_zplus->z += -(gravity * resolution) * deltat *
 					((h_zplus->x + h_zplus->y) - (h->x + h->y));
-				//v_zplus->z = min(v_zplus->z, a_vel * 1 / deltat);
 				if (v_zplus->z > a_vel * 1 / deltat) {
 					v_zplus->z = a_vel * 1 / deltat;
 				}
@@ -345,8 +339,6 @@ void WaterMass::advect_velocities() {
 }
 
 
-
-
 void WaterMass::add_source(const vec3& pos, bool is_drain) {
 	if (source_index >= 100)
 		return;
@@ -383,37 +375,3 @@ void WaterMass::set_source_height() {
 			(int)(sources[i].position.z - z_offset) * resolution)->x = sources[i].get_height();
 	}
 }
-
-
-
-
-
-
-
-
-
-//for overshooting reduction
-			/*if (x != 0 && x != grid_size_x - 1 && z != 0 && z != grid_size_z - 1) {
-				vec4* h_xp = height_copy.at(x + 1, z);
-				vec4* h_xm = height_copy.at(x - 1, z);
-				vec4* h_zp = height_copy.at(x, z + 1);
-				vec4* h_zm = height_copy.at(x, z - 1);
-
-				//this should be separate function, does not work now
-				will prbably not use
-				if ((h->x + h->y) - (h_xm->x + h_xm->y) > lambda_edge &&
-					(h->x + h->y) > (h_xp->x + h_xp->y))
-					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_xp->x) - h->x));
-
-				if ((h->x + h->y) - (h_xp->x + h_xp->y) > lambda_edge &&
-					(h->x + h->y) > (h_xm->x + h_xm->y))
-					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_xm->x) - h->x));
-
-				if ((h->x + h->y) - (h_zm->x + h_zm->y) > lambda_edge &&
-					(h->x + h->y) > (h_zp->x + h_zp->y))
-					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_zp->x) - h->x));
-
-				if ((h->x + h->y) - (h_zp->x + h_zp->y) > lambda_edge &&
-					(h->x + h->y) > (h_zm->x + h_zm->y))
-					h->x += alpha_edge * (max((double)0, 0.5 * (h->x + h_zm->x) - h->x));
-			}*/

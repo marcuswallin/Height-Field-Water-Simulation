@@ -104,8 +104,6 @@
     <None Include="source\shaders\skybox.vert" />
     <None Include="source\shaders\terrain.frag" />
     <None Include="source\shaders\terrain.vert" />
-    <None Include="source\shaders\terrainphong.frag" />
-    <None Include="source\shaders\terrainphong.vert" />
     <None Include="source\shaders\water.frag" />
     <None Include="source\shaders\water.geom" />
     <None Include="source\shaders\water.vert" />

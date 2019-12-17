@@ -38,22 +38,14 @@ void main(void)
 		specular = 1.0 * pow(specular, 250.0);
 
 	specular = clamp(specular, 0, 1);
-
-
 	shade = diffuse + specular;
-	// vec4(water_heightG);
-	vec4 color = vec4(shade, shade, shade, 1.0)*vec4(0.1,0.2,0.4,1);//texture(tex, texCoordG);
-	//temporary workaround
 
-	//SKRÄP!!!!!
-	float v_dot = dot(normalize(exNormalG), v);
-	float water_h = clamp(water_heightG, 1, 5);
+	vec4 color = vec4(shade, shade, shade, 1.0)*vec4(0.1,0.2,0.4,1);
+
 	mat3 normalMatrix = mat3(camMatrix * mdlMatrix);
 	normalMatrix = inverse(normalMatrix);
 	normalMatrix = transpose(normalMatrix);
 	vec3 y = normalize(normalMatrix*vec3(0,1.0,0));
-	//color.a = clamp((1-v_dot)*(1+water_heightG/2), 0.15*water_h, 0.99);
-	
 	float cs = clamp(water_heightG/(dot(y, v)), 0.01, 1.0);
     color.a = clamp(cs, 0.15, 0.90);
 

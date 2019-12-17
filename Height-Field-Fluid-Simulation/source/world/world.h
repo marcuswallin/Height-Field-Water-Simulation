@@ -25,15 +25,9 @@ public:
 
 	Terrain terrain;
 	WaterMass water;
-	//Model* terrain_model;
+
 private:
-	//std::vector<std::vector<GLfloat>>& create_water_from_terrain(
-	//	int x_start, int x_end, int z_start, int z_end, float offset);
-	//mprobably not needed
-	//TextureData terrain_texture;
-	//int grid_size_x;
-	//int grid_size_z;
-	float world_scale;
+
 };
 
 
