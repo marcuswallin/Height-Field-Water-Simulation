@@ -7,7 +7,7 @@
 using namespace std;
 int time_diff;
 
-Model* m, * skybox_model;
+Model * skybox_model;
 GLuint sky_program;
 TextureData ground_color_tex, sand_tex, gravel_tex, skybox_tex, water_color_tex, big_ground_tex, grid_tex;
 
@@ -30,24 +30,18 @@ void init(void)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//vec3 start_pos = SetVector(120, 10,140);
 	vec3 start_pos = SetVector(120, 30,155);
 
 	int x_size = 200;
 	int z_size = 200;
-	int water_resolution =1;
+	int water_resolution = 1;
 
 	initControls(start_pos, 0, M_PI / 2);
 	
 	sky_program = loadShaders("source/shaders/skybox.vert", "source/shaders/skybox.frag");
-
-	// Upload geometry to the GPU:
-	m = LoadModelPlus((char*)"objects/teapot.obj");
 	skybox_model = LoadModelPlus((char*)"objects/skybox.obj");
 
-
-	
-	world = World("textures/cloud5.tga", 
+	world = World("textures/ground_height.tga", 
 		start_pos.x - x_size/2, start_pos.x + x_size/2, start_pos.z - 30 - z_size/2, 
 		start_pos.z - 30 + z_size/2, 0 , water_resolution, time_diff);
 	
@@ -56,7 +50,6 @@ void init(void)
 
 	glUseProgram(sky_program);
 	glUniformMatrix4fv(glGetUniformLocation(sky_program, "projMatrix"), 1, GL_TRUE, projectionMatrix.m);
-
 
 	//textures-------------------------------------------------------
 	glActiveTexture(GL_TEXTURE0);
@@ -68,16 +61,14 @@ void init(void)
 	glActiveTexture(GL_TEXTURE3);
 	LoadTGATexture("textures/water512.tga", &water_color_tex);
 	glActiveTexture(GL_TEXTURE4);
-	LoadTGATexture("textures/rgb_cloud6.tga", &big_ground_tex);
+	LoadTGATexture("textures/rgb_ground.tga", &big_ground_tex);
 	glActiveTexture(GL_TEXTURE5);
 	LoadTGATexture("textures/rock_stones.tga", &gravel_tex);
 	glActiveTexture(GL_TEXTURE6);
-	LoadTGATexture("textures/sand_2.tga", &sand_tex);
-
+	LoadTGATexture("textures/sand.tga", &sand_tex);
 
 	world.terrain.init_program(projectionMatrix, worldToViewMatrix);
 	world.water.init_program(&projectionMatrix);
-
 
 	printError("init finished");
 }
@@ -95,7 +86,7 @@ void display(void)
 
 	//set up matrices
 	cam_matrix = cameraPlacement();
-	model_world = IdentityMatrix(); //change this
+	model_world = IdentityMatrix(); 
 	model_to_view = cam_matrix * model_world;
 
 	glUseProgram(sky_program);
@@ -187,8 +178,3 @@ void keyboard_interaction() {
 		!glutKeyIsDown('g') && !glutKeyIsDown('e') && !glutKeyIsDown('q') && key_is_down)
 		key_is_down = false;
 }
-
-
-
-//GLfloat t = glutGet(GLUT_ELAPSED_TIME) / 100.0;
-//glUniform1f(glGetUniformLocation(program, "t"), t);

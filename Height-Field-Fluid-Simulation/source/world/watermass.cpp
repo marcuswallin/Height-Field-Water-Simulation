@@ -79,7 +79,7 @@ void WaterMass::init_program(const mat4* proj_mat) {
 	//WELLS---------------------------------------------------------------
 
 	well_program = loadShaders("source/shaders/wells.vert", "source/shaders/wells.frag");
-	well_model = LoadModelPlus((char*)"objects/force_generator.obj");
+	well_model = LoadModelPlus((char*)"objects/well.obj");
 	glUseProgram(well_program);
 	glUniformMatrix4fv(glGetUniformLocation(well_program, "projMatrix"), 1, GL_TRUE, proj_mat->m);
 	glUseProgram(program);
