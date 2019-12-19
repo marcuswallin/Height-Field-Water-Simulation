@@ -15,6 +15,8 @@ bool calc_water = false;
 bool print_time = false;
 bool display_grid = false;
 bool show_depth = false;
+bool show_parallax = true;
+
 vec3 *wells;
 World world;
 
@@ -128,6 +130,11 @@ void keyboard_interaction() {
 		calc_water = !calc_water;
 		key_is_down = true;
 	}
+	if (glutKeyIsDown('å') && !key_is_down)
+	{
+		show_parallax = !show_parallax;
+		key_is_down = true;
+	}
 	if (glutKeyIsDown('t') && !key_is_down)
 	{
 		print_time = !print_time;
@@ -168,8 +175,10 @@ void keyboard_interaction() {
 		show_depth = !show_depth;
 		key_is_down = true;
 	}
-	if(	!glutKeyIsDown('p') && !glutKeyIsDown('t') && 
+	if(	!glutKeyIsDown('p') && !glutKeyIsDown('t') && !glutKeyIsDown('å') &&
 		!glutKeyIsDown('r') && !glutKeyIsDown('c') &&
 		!glutKeyIsDown('g') && !glutKeyIsDown('e') && !glutKeyIsDown('q') && key_is_down)
 		key_is_down = false;
+
+	world.water.show_parallax(show_parallax);
 }
