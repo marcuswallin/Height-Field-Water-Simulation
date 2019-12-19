@@ -137,7 +137,7 @@ void keyboard_interaction() {
 	{
 
 		mat4 projectionMatrix = frustum(-0.13, 0.13, -0.1, 0.1, 0.2, 300.0);
-		delete world.water.height_array;
+		delete world.water.grid_array;
 		world.water = WaterMass{ world.terrain, 40,150,40,150,1,2,time_diff };
 		world.water.init_program(&projectionMatrix);
 

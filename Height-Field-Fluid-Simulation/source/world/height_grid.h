@@ -9,18 +9,18 @@
 #include <vector>
 
 //abstract class that is used to define terrain and watermass classes
-class HeightGrid {
+class Grid {
 public:
-	HeightGrid() = default;
-	HeightGrid(int grid_x, int grid_z, bool intitiate_array);
-	HeightGrid(const HeightGrid &h);
-	~HeightGrid() = default;
+	Grid() = default;
+	Grid(int grid_x, int grid_z, bool intitiate_array);
+	Grid(const Grid &h);
+	~Grid() = default;
 
 	/*
 	contains information about height of the grid;
 	rows are z, columns are x
 	possibly should be another struct in the future*/
-	vec4* height_array;
+	vec4* grid_array;
 	int grid_size_x;
 	int grid_size_z;
 

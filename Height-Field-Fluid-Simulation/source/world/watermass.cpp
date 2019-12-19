@@ -7,7 +7,7 @@ using namespace std;
 //velocities initiated as staggered grid
 WaterMass::WaterMass(Terrain& terrain,
 	int x_start, int x_end, int z_start, int z_end, float offset, int resolution_,  int timestep_length) :
-	HeightGrid{ (x_end - x_start)*resolution_,  (z_end - z_start)*resolution_, true  },
+	Grid{ (x_end - x_start)*resolution_,  (z_end - z_start)*resolution_, true  },
 	x_offset(x_start), z_offset(z_start), resolution{resolution_}, deltat{ (float)timestep_length / 1000},
 	velocities{ (x_end - x_start)*resolution_ + 1,  (z_end - z_start) * 2 * resolution_ + 1, true }{
 
@@ -30,7 +30,7 @@ void WaterMass::draw(const mat4& cam_mat, int time_diff,
 	}
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, grid_size_x, grid_size_z, 0,
-		GL_RGBA, GL_FLOAT, &height_array[0].x);
+		GL_RGBA, GL_FLOAT, &grid_array[0].x);
 	glUniform1i(glGetUniformLocation(program, "waterHeight"), 15);
 
 	if(show_grid)
@@ -62,7 +62,7 @@ void WaterMass::init_program(const mat4* proj_mat) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, grid_size_x, grid_size_z, 0,
-		GL_RGBA, GL_FLOAT, &height_array[0].x);//&smoke_array[0].pos.x);
+		GL_RGBA, GL_FLOAT, &grid_array[0].x);//&smoke_array[0].pos.x);
 	//water_program should be coitained by watermass
 	glUniform1i(glGetUniformLocation(program, "waterHeight"), 15);
 	glUniform1i(glGetUniformLocation(program, "resolution"), resolution);
@@ -120,7 +120,7 @@ void WaterMass::calculate_movements() {
 
 	//advect_velocities();
 	
-	HeightGrid height_copy{ *this };
+	Grid height_copy{ *this };
 	for (int z = 0; z < grid_size_z; ++z) {
 		for (int x = 0; x < grid_size_x; x++)
 		{
@@ -137,8 +137,8 @@ void WaterMass::calculate_movements() {
 		}
 	}
 
-	delete [] this->height_array;
-	height_array = height_copy.height_array;
+	delete [] this->grid_array;
+	grid_array = height_copy.grid_array;
 	velocity_integration();
 }
 

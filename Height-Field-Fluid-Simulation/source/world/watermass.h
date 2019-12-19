@@ -11,7 +11,7 @@
 #include "water_source.h"
 
 
-class WaterMass : public HeightGrid{
+class WaterMass : public Grid{
 public:
 	WaterMass() = default;
 	WaterMass(Terrain& terrain,
@@ -61,7 +61,7 @@ private:
 	int resolution;
 
 	//stores velocities in the x and z parts
-	HeightGrid velocities;
+	Grid velocities;
 
 	float get_height_derivative(int x, int z);
 	vec4* get_velocity(int x, int z, int x_offset, int z_offset);

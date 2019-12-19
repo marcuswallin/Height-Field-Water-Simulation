@@ -4,34 +4,34 @@
 
 using namespace std;
 
-HeightGrid::HeightGrid(int grid_x, int grid_z, bool initiate_array) :
+Grid::Grid(int grid_x, int grid_z, bool initiate_array) :
 	grid_size_x{grid_x}, grid_size_z{grid_z}{
 
 	if (initiate_array){
-		height_array = new vec4[grid_size_x * grid_size_z];
+		grid_array = new vec4[grid_size_x * grid_size_z];
 	}
 }
 
 
 
-HeightGrid::HeightGrid(const HeightGrid& h) : 
+Grid::Grid(const Grid& h) : 
 	grid_size_x { h.grid_size_x }, grid_size_z{ h.grid_size_z }{
-	height_array = new vec4[grid_size_x * grid_size_z];
+	grid_array = new vec4[grid_size_x * grid_size_z];
 	for (int i = 0; i < grid_size_x * grid_size_z; ++i) {
-		height_array[i]=h.height_array[i];
+		grid_array[i]=h.grid_array[i];
 	}
 }
 
 //returns 0 if outside grid, should be handled elsewhere
-vec4* HeightGrid::at(int x, int z) {
+vec4* Grid::at(int x, int z) {
 	if (x < 0 || x >= grid_size_x || z < 0 || z >= grid_size_z)
 		return new vec4{ 0,0,0,0 };
-	return &height_array[x + z * grid_size_x];
+	return &grid_array[x + z * grid_size_x];
 }
 
 
 //uses bilinear interpolation
-float HeightGrid::interpolate_height(int x, int z, float off_x, float off_z) {
+float Grid::interpolate_height(int x, int z, float off_x, float off_z) {
 	
 	if (x + 1 >= grid_size_x || z + 1 >= grid_size_z) {
 		throw invalid_argument("Trying to interpolate at edge.");

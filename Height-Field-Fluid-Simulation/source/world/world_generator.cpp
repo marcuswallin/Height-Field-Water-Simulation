@@ -5,7 +5,7 @@ using namespace std;
 
 //generates the terrain model based on texture data
 //should change to height array data
-Model* GenerateTerrain(HeightGrid* height_grid, bool generate_zero, int resolution)
+Model* GenerateTerrain(Grid* height_grid, bool generate_zero, int resolution)
 {
 	const int vertexCount = height_grid->grid_size_x * height_grid->grid_size_z;
 	int triangleCount = (height_grid->grid_size_x - 1) * (height_grid->grid_size_z - 1) * 2;
@@ -71,7 +71,7 @@ Model* GenerateTerrain(HeightGrid* height_grid, bool generate_zero, int resoluti
 
 
 
-vec3 calculateNormal(GLfloat* vertexArray, int x, int z, const HeightGrid* height_grid)
+vec3 calculateNormal(GLfloat* vertexArray, int x, int z, const Grid* height_grid)
 {
 
 	vec3 this_vertice = getVertex(vertexArray, x, z, height_grid);
@@ -121,7 +121,7 @@ vec3 calculateNormal(GLfloat* vertexArray, int x, int z, const HeightGrid* heigh
 }
 
 
-vec3 getVertex(GLfloat* verticeArray, int x, int z, const HeightGrid* height_grid)
+vec3 getVertex(GLfloat* verticeArray, int x, int z, const Grid* height_grid)
 {
 	
 	if (x >= 0 && x < height_grid->grid_size_x && z >= 0 && z < height_grid->grid_size_z)

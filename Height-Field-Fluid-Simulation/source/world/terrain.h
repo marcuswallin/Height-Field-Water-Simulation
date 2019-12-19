@@ -9,7 +9,7 @@
 #include "world_generator.h"
 
 
-class Terrain : public HeightGrid {
+class Terrain : public Grid {
 public:
 	Terrain() = default;
 	
