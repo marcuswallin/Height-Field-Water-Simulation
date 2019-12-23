@@ -43,7 +43,7 @@ void main(void)
 
 	vec4 color = vec4(shade, shade, shade, 1.0)*vec4(0.1,0.2,0.4,1);
 
-	color.a = clamp(water_heightG/2, 0.1, 0.99);
+	color.a = clamp(water_heightG, 0.1, 0.90);
 	if (show_parallax == 1){
 		mat3 normalMatrix = mat3(camMatrix * mdlMatrix);
 		normalMatrix = inverse(normalMatrix);
