@@ -375,3 +375,9 @@ void WaterMass::set_source_height() {
 			(int)(sources[i].position.z - z_offset) * resolution)->x = sources[i].get_height();
 	}
 }
+
+
+void WaterMass::show_parallax(bool par)
+{
+	glUniform1i(glGetUniformLocation(program, "show_parallax"), (int)par);
+}

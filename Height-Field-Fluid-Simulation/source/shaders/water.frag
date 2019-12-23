@@ -9,6 +9,7 @@ uniform mat4 mdlMatrix;
 in vec3 exSurfaceG;
 uniform int show_grid;
 uniform int show_depth;
+uniform int show_parallax;
 
 
 
@@ -42,13 +43,15 @@ void main(void)
 
 	vec4 color = vec4(shade, shade, shade, 1.0)*vec4(0.1,0.2,0.4,1);
 
-	mat3 normalMatrix = mat3(camMatrix * mdlMatrix);
-	normalMatrix = inverse(normalMatrix);
-	normalMatrix = transpose(normalMatrix);
-	vec3 y = normalize(normalMatrix*vec3(0,1.0,0));
-	float cs = clamp(water_heightG/(dot(y, v)), 0.01, 1.0);
-    color.a = clamp(cs, 0.15, 0.90);
-
+	color.a = clamp(water_heightG, 0.1, 0.90);
+	if (show_parallax == 1){
+		mat3 normalMatrix = mat3(camMatrix * mdlMatrix);
+		normalMatrix = inverse(normalMatrix);
+		normalMatrix = transpose(normalMatrix);
+		vec3 y = normalize(normalMatrix*vec3(0,1.0,0));
+		float cs = clamp(water_heightG/(dot(y, v)), 0.01, 1.0);
+		color.a = clamp(cs, 0.15, 0.90);
+	}
 
 	outColor = color;
 	if (show_grid == 1)

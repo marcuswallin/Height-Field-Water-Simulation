@@ -30,6 +30,7 @@ public:
 	void gen_water_from_terrain(Terrain&,
 		int x_start, int x_end, int z_start, int z_end, float offset, int resolution);
 	void draw_sources(const mat4& cam_mat);
+	void show_parallax(bool);
 private:
 
 	//the texture that the height was read from
